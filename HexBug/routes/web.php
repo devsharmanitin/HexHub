@@ -63,6 +63,7 @@ Route::controller(FollowController::class)->group(function(){
 
 
 Route::controller(AuthController::class)->group(function(){
+
     Route::get('/add/user/{id}/details' , 'addRequestUser')->name('addRequestUser');
     Route::post('/update/user/details/{id}/', 'addRequestUserdb')->name('addRequestUserdb');
     Route::get('/user/profile/request' ,'RequestUser')->name('RequestUser');
@@ -78,8 +79,9 @@ Route::controller(AuthController::class)->group(function(){
 
 Route::controller(StripeController::class)->group(function(){
    
-    Route::get('/checkout/user', 'Checkout')->name('Checkout');
-    Route::post("/checkout/session" , 'StripeCheckOut')->name('StripeCheckOut');
+    Route::get('/checkout/{id}/user', 'Checkout')->name('Checkout');
+    Route::post("/checkout/{id}/session" , 'StripeCheckOut')->name('StripeCheckOut');
+    Route::post('/stripe/handle/webhook', 'handlewebhook');
     Route::get('/success' , 'success')->name('success');
 
 });
@@ -90,6 +92,10 @@ Route::controller(SubscriptionController::class)->group(function(){
    
     Route::get('/create/subscription/' , 'createsubscriptiontemp')->name('createsubscriptiontemp');
     Route::post('/create/user/subscription', 'createSubScription')->name('createSubScription');
+    Route::get('/subscriptions/list' , 'Subscriptionplans')->name('Subscriptionplans');
+    Route::put('/subscription/{id}/update' , 'updateSubScription')->name('updateSubScription');
+    Route::delete('/subscription/{id}/delete' , 'deleteSubScription')->name('deleteSubScription');
+
     
 });
 

@@ -235,40 +235,17 @@ a:hover{
   width: none;
   text-align: center;
 }
+
+
 </style>
 
 
 <div class="container-fluid">
 	<div class="row">
-	<a href="#" target="_blank" style="text-decoration: none;">
-  <div class="text-center text-white py-2" 
-    style="background: linear-gradient(45deg, rgb(64, 93, 230), rgb(88, 81, 219), rgb(131, 58, 180), rgb(193, 53, 132), rgb(225, 48, 108), rgb(253, 29, 29)); font-size: 13px; font-weight: 400;">
-    <i class="fab fa-instagram"></i> We have also on instagram 🎉 Follow us
-  </div>
-</a>
 
-  <div class="container">
-    <nav class="py-5 nav-bar container">
-      <div class="nav-container">
-        <div class="nav-body">
-          <div class="nav-logo">
-            <ion-icon name="logo-paypal"></ion-icon><span class="logo-text" style="font-weight: 600;">YTHONWORLD.IO</span>
-          </div>
-          <div class="nav-right">
-            <div class="nav-menu">
-              <a class="nav-logo" href="{{ route('index') }}"><span class="logo-text" style="font-weight: 600;">Overview</span></a>
-              <a class="inactive-nav" href="{{ route('blogposts') }}"><span class="logo-text" style="font-weight: 600;">Blogs</span></a>
-              <a class="inactive-nav" href="{{route('createblog')}}"><span class="logo-text" style="font-weight: 600;">Write</span></a>
-              <a class="inactive-nav" href="/contact"><span class="logo-text" style="font-weight: 600;">About</span></a>
-              <a class="inactive-nav" href="{{ route('friendscontact') }}"><span class="logo-text" style="font-weight: 600;">Contact</span></a>
-              <a class="inactive-nav" href="{{ route('logout') }}"><span class="logo-text" style="font-weight: 600;">Logout</span></a>
-              <a class="inactive-nav" href="{{ route('RequestUser') }}"><img src="https://images.unsplash.com/photo-1697974375586-24a83dbbbde9?auto=format&fit=crop&q=80&w=1374&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid nav_img"><span class="logo-text" style="font-weight: 600;"></span></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>                                                                                              
-  </div>
+
+
+  @include('layouts.navbar')
 	</div>	
 </div>
 

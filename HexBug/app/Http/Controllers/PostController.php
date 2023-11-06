@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\FollowController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-
+use App\Models\UserSubscription;
 
 
 class PostController extends Controller
@@ -59,7 +60,14 @@ class PostController extends Controller
             $postCount = 0;
         }
         if($postCount>= 3){
-            return redirect()->route('subscriptionPlans')->with('error','You Must Buy a Plan For More Posting');
+            $currentDateTime = Carbon::now();
+            $existingSubscription = UserSubscription::where([
+                'user_id' => auth()->user()->id,
+                'purchase_date' => $currentDateTime->format('Y-m-d H:i:s'),
+                'is_active' => 1,
+            ])->first();
+            if (!$existingSubscription){}
+            return redirect()->route('Subscriptionplans')->with('error','You Must Buy a Plan For More Posting');
         }else{
             return view('posts.create');
         }
