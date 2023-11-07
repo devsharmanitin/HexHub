@@ -50,9 +50,28 @@ class PostController extends Controller
         return view('posts.blogs' , [ 'posts'=>$posts , 'tags'=>$querytags]) ; 
     }
 
+    public function checkpostrules($id){
+        $user = User::find($id);
+        $userposts = $user->posts;
+        if($userposts){
+            $postCount = count($userposts);
+        }else{
+            $postCount = 0;
+        }
+        if($postCount>= 3){
+            $subscriptions = UserSubscription::where([
+                'user_id' => $user->id,
+                'is_active'=> 1,
+            ])->orderBy('purchase_date')->first();
+            // DD($subscriptions);
+            return $subscriptions;
+        }
+    }
+
     // get method to render a template
     public function createblogtemp(){
         $user = auth()->user();
+        // $tte = $this->checkpostrules($user->id);
         $posts = $user->posts;
         if($posts){
             $postCount = count($posts);
@@ -63,16 +82,21 @@ class PostController extends Controller
             $currentDateTime = Carbon::now();
             $existingSubscription = UserSubscription::where([
                 'user_id' => auth()->user()->id,
-                'purchase_date' => $currentDateTime->format('Y-m-d H:i:s'),
                 'is_active' => 1,
-            ])->first();
-            if (!$existingSubscription){}
-            return redirect()->route('Subscriptionplans')->with('error','You Must Buy a Plan For More Posting');
-        }else{
+            ])->where('purchase_date' ,'<=' , $currentDateTime->toDateTimeString())->get();
+            if ($existingSubscription){
+              
+                return view('posts.create');
+            }else{
+              
+                return redirect()->route('Subscriptionplans')->with('error','You Must Buy a Plan For More Posting');}
+        }
+        else{
             return view('posts.create');
         }
     }
 
+   
 
     // Create Blog Post method 
     public function createBlog(Request $request){

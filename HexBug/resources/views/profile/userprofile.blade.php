@@ -1,423 +1,258 @@
 @extends('layouts.app')
 @section('content')
 
-
-
-
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
-
-
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
-
-  * {
-    padding: 0;
+  .medium-div p {
+    font-size: 14px;
+    font-weight: 600;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  .container-fluid{
     margin: 0;
+   
   }
 
-  .container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-  }
-
-  .container .card {
-    height: 440px;
-    width: 700px;
-    border-radius: 10px;
-    background-color: #ffffff;
-    position: relative;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    font-family: 'Poppins', sans-serif;
-    overflow: hidden;
-    cursor: pointer;
-
-  }
-
-  .container .card .form {
-    width: 100%;
-    height: 100%;
-    display: flex;
-
-  }
-
-  .container .card .left-side {
-    width: 50%;
-    background-color: #f3efef;
-    height: 100%;
-    border: 0.5px solid rgb(228, 226, 226);
-
-  }
-
-  .form .left-side .top-div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    position: relative;
-  }
-
-  .form .left-side .top-div h2 {
+  h1 {
     font-size: 30px;
     margin-bottom: 5px;
-    font-weight: 8000;
+    font-weight: 900;
   }
 
-  .form .left-side .top-div span {
-    height: 7px;
-    width: 7px;
-    border-radius: 50%;
-    background-color: red;
-    position: absolute;
-    left: 67px;
-    top: 46px;
+  .px-3 {
+    padding-left: 0 !important;
   }
-
-  .form .left-side .top-div p {
-    font-size: 14px;
-  }
-
-  .form .left-side .medium-div {
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    flex-direction: column;
-    position: relative;
-    padding: 20px 45px;
-  }
-
-  .form .left-side .Info-div {
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    flex-direction: column;
-    position: relative;
-    width: 100%;
-    
-  }
-  .card
-
-  .form .left-side .medium-div h1:nth-child(1) {
-    font-size: 40px;
-
-  }
-
-  .form .left-side .medium-div h1:nth-child(2) {
-    font-weight: 100;
+  p a ion-icon{
     font-size: 30px;
-    margin-top: -20px;
-    margin-bottom: 12px;
+    font-weight: 800;
+    color: rgb(122, 122, 122);
   }
-
-  .form .left-side .medium-div p {
-    font-size: 14px;
-  }
-
-  .form .left-side .icons {
-    padding: 15px 45px;
-
-    position: relative;
-    display: grid;
-    justify-content: center;
-  }
-
-
-  .form .left-side .icons button {
-    height: 30px;
-    width: 100px;
-    justify-content: center;
-    background-color: #ff4646;
-    border-radius: 60px;
-    border: none;
-    color: white;
-    transition: all 0.5s;
-  }
-
-  .form .left-side .icons button:hover {
-    background-color: #f10808;
-  }
-
-  .form .left-side .last-div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 17px;
-    font-weight: 600px;
-  }
-
-  .form .left-side .last-div p {
-    padding-inline: 10px;
-  }
-
-  .hexa .hexagonal small {
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-  }
-
-
-  .hexa .hexagonal small:nth-child(1) {
-    position: absolute;
-    top: 19px;
-    left: -17px;
-    opacity: 0;
-    transition: all 0.5s;
-  }
-
-  .hexa .hexagonal small:nth-child(2) {
-    position: absolute;
-    top: -12px;
-    left: -35px;
-    opacity: 0;
-    transition: all 0.5s;
-  }
-
-  .hexa .hexagonal small:nth-child(3) {
-    position: absolute;
-    top: -12px;
-    left: -0px;
-    opacity: 0;
-    transition: all 0.5s;
-  }
-
-  ion-icon {
-    font-size: 30px;
+  .nav-pills{
     font-weight: 600;
+    font-size: 20px;
+    color: black;
   }
-
-
-
-
-
-
-
-  .container .card .right-side {
-    width: 50%;
-    background-color: #000;
-    height: 100%;
-    z-index: 10;
-  }
-
-  .right-side {
-    text-align: center;
-    place-items: center;
-
-  }
-
-  .right-side img {
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  @media (max-width:750px) {
-    .container .card {
-      max-width: 350px;
-
-    }
-
-    .container .card .right-side {
-      display: inline-block;
-    }
-
-    .container .card .left-side {
-      width: 100%;
-    }
-  }
-
-  .nav {
-    margin-left: auto;
-  }
-  .info-card{
-    width: 100%;
-  }
-  .info-card-body{
-    height: 100%;
-    width: 100%;
-  }
-  a{
-    color: #444444;
+  p span{
+    font-weight: 600;
+    color: rgb(46, 46, 46);
   }
 </style>
 
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <img src="{{asset('storage/'.$user->image)}}" style="width: 100%; height: 100vh; object-fit: cover;">
+    </div>
+    <div class="col-6">
+      <div class="container">
+        <!-- Tabs navs -->
+        <ul class="nav nav-pills mb-3" id="ex-with-icons" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="ex-with-icons-tab-1" data-mdb-toggle="tab" href="#ex-with-icons-tabs-1"
+              role="tab" aria-controls="ex-with-icons-tabs-1" aria-selected="true"><i
+                class="fas fa-chart-pie fa-fw me-2"></i>My Profile</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ex-with-icons-tab-2" data-mdb-toggle="tab" href="#ex-with-icons-tabs-2" role="tab"
+              aria-controls="ex-with-icons-tabs-2" aria-selected="false"><i
+                class="fas fa-chart-line fa-fw me-2"></i>Projects</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ex-with-icons-tab-3" data-mdb-toggle="tab" href="#ex-with-icons-tabs-3" role="tab"
+              aria-controls="ex-with-icons-tabs-3" aria-selected="false"><i
+                class="fas fa-cogs fa-fw me-2"></i>SubScriptions</a>
+          </li>
+        </ul>
+        <!-- Tabs navs -->
 
+        <!-- Tabs content -->
+        <div class="tab-content" id="ex-with-icons-content">
+          <div class="tab-pane fade show active" id="ex-with-icons-tabs-1" role="tabpanel"
+            aria-labelledby="ex-with-icons-tab-1">
 
-<div class="container">
-  
-  <div class="card">
-    <div class="form">
-
-      <div class="left-side">
-        <div class="top-div">
-          <ul class="nav nav-pills mb-3" id="ex1" role="tablist">
-            <li class="nav-item" role="presentation">
-              <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="pill" href="#ex1-pills-1" role="tab"
-                aria-controls="ex1-pills-1" aria-selected="true">
-                <p>{{ explode(' ', $user->name)[0] }}</p>
-              </a>
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="pill" href="#ex1-pills-2" role="tab"
-                aria-controls="ex1-pills-2" aria-selected="false">Info</a>
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="pill" href="#ex1-pills-3" role="tab"
-                aria-controls="ex1-pills-3" aria-selected="false">Social</a>
-            </li>
-          </ul>
-
-        </div>
-
-        <!-- Pills content -->
-        <div class="tab-content" id="ex1-content">
-          <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-
-            <div class="medium-div">
-              <h1>{{ explode(' ', $user->name)[0] }}</h1>
-              <h1>{{ explode(' ', $user->name)[1] }}</h1>
-              <p>{{$user->status}}</p>
-              <div class="p-2 text-black" style="background: transparent;">
-                <div class="d-flex justify-content-center text-center ">
-                  <div class="px-3">
-                    <p class="mb-1 h5">{{count($posts)}}</p>
-                    <p class="small text-muted mb-0">Photos</p>
+            <div class="container">
+              <div class="row">
+                <div class="col-10">
+                  <div class="medium-div py-2">
+                    <h1>{{ explode(' ', $user->name)[0] }}</h1>
+                    <h1>{{ explode(' ', $user->name)[1] }}</h1>
+                    <p>{{$user->email}}</p>
+                    <p>{{$user->username}}</p>
+                    <p>@ {{$user->status}}</p>
+                    <p>(+ 91) {{$user->number}}</p>
+                    <p>{{$user->address}}</p>
+                    <div class="mt-5 mb-5 text-black" style="background: transparent;">
+                      <div class="d-flex justify-content-start  ">
+                        <div class="px-3">
+                          <p class="mb-1 h5">{{count($posts)}}</p>
+                          <p class="small text-muted mb-0">Photos</p>
+                        </div>
+                        <div class="px-3">
+                          <p class="mb-1 h5">{{count($followers)}}</p>
+                          <p class="small text-muted mb-0">Followers</p>
+                        </div>
+                        <div>
+                          <p class="mb-1 h5">{{count($followings)}}</p>
+                          <p class="small text-muted mb-0">Following</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="px-3">
-                    <p class="mb-1 h5">{{count($followers)}}</p>
-                    <p class="small text-muted mb-0">Followers</p>
+                  <div class="px-3 mb-5">
+                    <p class="mb-1 h5"><span>₹ {{ $spentamount }}</span></p>
+                    <p class="small text-muted mb-0"><span>Total Amount Spent</span></p>
                   </div>
-                  <div>
-                    <p class="mb-1 h5">{{count($followings)}}</p>
-                    <p class="small text-muted mb-0">Following</p>
-                  </div>
+                  <a href="{{ route('addRequestUser',['id'=>$user->id]) }}" class="btn btn-outline-primary ms-1">Update Profile</a>
+                </div>
+                <div class="col-2">
+                  <p>
+                    <a href="{{$user->facebook}}"><ion-icon name="logo-facebook"></ion-icon></a>
+                  </p>
+    
+                  <p>
+                    <a href="{{$user->instagram}}"><ion-icon name="logo-instagram"></ion-icon></a>
+                  </p>
+    
+                  <p>
+                    <a href="{{$user->github}}"><ion-icon name="logo-github"></ion-icon></a>
+                  </p>
                 </div>
               </div>
             </div>
-            <div class="icons">
-              <button>Say Hello</button>
-            </div>
-            <div class="last-div">
-              <p>
-                <a href="{{$user->facebook}}"><ion-icon name="logo-facebook"></ion-icon></a>
-              </p>
 
-              <p>
-                <a href="{{$user->instagram}}"><ion-icon name="logo-instagram"></ion-icon></a>
-              </p>
 
-              <p>
-                <a href="{{$user->github}}"><ion-icon name="logo-github"></ion-icon></a>
-              </p>
-            </div>
           </div>
+          <div class="tab-pane fade" id="ex-with-icons-tabs-2" role="tabpanel" aria-labelledby="ex-with-icons-tab-2">
 
-          <div class="tab-pane fade" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-            <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+            <p class="mb-4"><span class="text-primary font-italic me-1">
+            </p>
 
-              <div class="Info-div px-4">
-                <div class="info-card mb-4">
-                  <div class="info-card-body">
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <p class="mb-0">Full Name</p>
-                      </div>
-                      <div class="col-sm-8">
-                        <p class="text-muted mb-0">{{$user->name}}</p>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <p class="mb-0">Email</p>
-                      </div>
-                      <div class="col-sm-8">
-                        <p class="text-muted mb-0">{{$user->email}}</p>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <p class="mb-0">Phone</p>
-                      </div>
-                      <div class="col-sm-8">
-                        <p class="text-muted mb-0">{{$user->number}}</p>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <p class="mb-0">Gender</p>
-                      </div>
-                      <div class="col-sm-8">
-                        <p class="text-muted mb-0">{{$user->gender}}</p>
-                      </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <p class="mb-0">Address</p>
-                      </div>
-                      <div class="col-sm-8">
-                        <p class="text-muted mb-0">{{$user->address}}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="icons">
+            <table class="table align-middle mb-0 bg-white">
+              <thead class="bg-light">
+                <tr>
+                  <th>
+                    <p class="fw-bold mb-1">Projects
+                  </th>
+                  </p>
+                  <th>Title</th>
 
-                <a href="{{ route('addRequestUser',['id'=>$user->id]) }}" class="btn btn-outline-primary ms-1">Update</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="tab-pane fade" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-            <div class="medium-div">
-            <div class="Info-div mb-4 mb-md-0">
-              <div class="info-card-body">
-                <p class="mb-4"><span class="text-primary font-italic me-1">{{$user->name}}</span> Project Status
-                </p>
-
+                  <th>Position</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
                 @foreach ($posts as $post)
                 @if (isset($post))
-                <p class="mb-2" style="font-size: .77rem;">{{$post->post_title}}</p>
-                <div class="progress rounded mb-3" style="height: 5px;">
-                  <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="80"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                @else 
-                <p class="mb-1" style="font-size: .77rem;">No Posts Yet.</p>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img src="{{ asset('storage/'.$post->images[0]->url) }}" alt=""
+                        style="width: 45px; height: 45px; object-fit: cover;" class="rounded-circle" />
+                      <div class="ms-3">
+                        <p class="fw-bold mb-1">{{$post->post_title}}</p>
+                        <div class="progress rounded mb-3" style="height: 5px;">
+                          <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="80"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="badge badge-success rounded-pill d-inline">Active</span>
+                  </td>
+                  <td>Senior</td>
+                  <td>
+                    <button type="button" class="btn btn-link btn-sm btn-rounded">
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+                @else
+                <tr>
+                  <td>No Posts Yet</td>
+                </tr>
                 @endif
                 @endforeach
-                
-                
-              </div>
-            </div>
+              </tbody>
+            </table>
+
+
           </div>
+          <div class="tab-pane fade" id="ex-with-icons-tabs-3" role="tabpanel" aria-labelledby="ex-with-icons-tab-3">
+            <!--Main layout-->
+            <main class="my-4">
+            
+
+                <!--Section: Content-->
+                <section class="text-center">
+                  <h4 class="mb-4"><strong>Purchase Plan</strong></h4>
+
+
+                  <div class="row gx-lg-5 justify-content-center">
+                    <!--Grid column-->
+                    @foreach($plans as $plan )
+                     <div class="col-lg-6 col-md-6 mb-4">
+                      @if (session('error'))
+                      <div id="messageSession" class="alert alert-danger">
+                        {{ session('error') }}
+                      </div>
+                      @elseif(session('success'))
+                      <div id="messageSession" class="alert alert-success">
+                        {{ session('success') }}
+                      </div>
+                      @endif
+
+                      <!-- Card -->
+                      <div class="card" style="border: 0.5px solid rgb(179, 178, 178);">
+
+                        <div class="card-header bg-white py-3">
+                          <p class="text-uppercase small mb-2"><strong>{{$plan->subscriptions->name}}</strong></p>
+                          <h5 class="mb-0">₹ {{$plan->subscriptions->price}}</h5>
+                          <p>{{$plan->purchase_date}}</p>
+                        </div>
+                        @php
+                        $contents = explode("," , $plan->subscriptions->content)
+                        @endphp
+                        <div class="card-body">
+                          <ul class="list-group list-group-flush">
+                            @foreach($contents as $content)
+                            <li class="list-group-item text-muted" style="font-weight: 600;">{{$content}}</li>
+                            @endforeach
+
+                          </ul>
+                        </div> 
+                      <!-- Card -->
+
+                    </div>
+                    @endforeach
+                    <!--Grid column-->
+
+
+
+                  </div>
+                </section>
+                <!--Section: Content-->
+            
+            </main>
+            <!--Main layout-->
+
+
+            <script>
+              setTimeout(function () {
+                var messageSession = document.getElementById('messageSession');
+                if (messageSession) {
+                  messageSession.style.display = 'none'; // Clear the message container
+                }
+              }, 3000); // 5000 milliseconds = 5 seconds
+            </script>
           </div>
         </div>
-        <!-- Pills content -->
-
-
-      </div>
-      <div class="right-side">
-        <img src="{{asset('storage/'.$user->image)}}">
-
-
+        <!-- Tabs content -->
       </div>
     </div>
   </div>
 </div>
-
 
 
 

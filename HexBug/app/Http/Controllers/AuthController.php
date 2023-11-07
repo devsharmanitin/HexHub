@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Post;
+use App\Models\UserSubscription;
 
 
 class AuthController extends Controller
@@ -89,8 +91,20 @@ class AuthController extends Controller
             $user_id = $request_user->id;
             $posts = Post::Where('author_id' , $user_id)->get();
             $followers = $request_user->follower;
-            $followings = $request_user->following; 
-            return view('profile.userprofile' , ['user'=>$request_user , 'posts'=>$posts , 'followers'=>$followers , 'followings'=>$followings]);
+            $followings = $request_user->following;
+            $currentDateTime = Carbon::now();
+            $plans = UserSubscription::where([
+                'user_id' => auth()->user()->id,
+                'is_active' => 1,
+            ])->where('purchase_date' , '<=' , $currentDateTime->toDateTimeString())->get();
+            // Calculate the sum of 'amount' for records where 'status' is 'completed'
+            $totalsubscriptions = auth()->user()->subscriptions;
+            // DD($totalsubscriptions);
+            $totalAmountSpent = 0;
+            foreach ($totalsubscriptions as $sub) {
+                $totalAmountSpent += intval($sub->subscriptions['price']);
+                }
+            return view('profile.userprofile' , ['user'=>$request_user , 'posts'=>$posts , 'followers'=>$followers , 'followings'=>$followings , 'plans'=>$plans , 'spentamount'=>$totalAmountSpent]);
             }
         else{
             return redirect()->route('login');  

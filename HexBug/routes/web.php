@@ -54,8 +54,7 @@ Route::controller(FollowController::class)->group(function(){
     Route::get('/user/{id}/profile' , 'getsingleuser')->name('getsingleuser')->middleware('auth');
     Route::get('/user/friends/'  , 'friendsuser')->name('friendsuser')->middleware('auth');
     Route::get('user/contact/friends' , 'friendscontact')->name('friendscontact')->middleware('auth');
-    
-    
+
 
 });
 
@@ -72,7 +71,7 @@ Route::controller(AuthController::class)->group(function(){
     Route::get('/login' , 'LoginController')->name('login');
     Route::post('/user/login' , 'authenticate')->name('authenticate');
     Route::get('/logout' , 'LogOutController')->name('logout')->middleware('auth');
-    Route::get('/user/{id}/profile' , 'getsingleuser')->name('getsingleuser');
+    
 });
 
 
@@ -81,8 +80,8 @@ Route::controller(StripeController::class)->group(function(){
    
     Route::get('/checkout/{id}/user', 'Checkout')->name('Checkout');
     Route::post("/checkout/{id}/session" , 'StripeCheckOut')->name('StripeCheckOut');
-    Route::post('/stripe/handle/webhook', 'handlewebhook');
-    Route::get('/success' , 'success')->name('success');
+    // Route::post('/stripe/handle/webhook', 'handlewebhook');   Webhoook Event 
+    Route::get('/success/{id}/' , 'success')->name('success');
 
 });
 

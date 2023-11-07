@@ -27,7 +27,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('subscription_id')->nullable();
-            $table->dateTime('purchase_date')->nullable();
+            $table->timestamp('purchase_date')->nullable();
             $table->boolean('is_active')->default(0);
             $table->timestamps();
         });

@@ -269,6 +269,16 @@ a:hover{
 
     <div class="row">
       <div class="col-8">
+
+      @if (session('error'))
+			<div id="messageSession" class="alert alert-danger">
+				{{ session('error') }}
+			</div>
+			@elseif(session('success'))
+			<div id="messageSession" class="alert alert-success">
+				{{ session('success') }}
+			</div>
+			@endif
         <!-- heading  -->
         <div class="row blog-world-release mb-4">
           <span class="bold">Recently Released</span>

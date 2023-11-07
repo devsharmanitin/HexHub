@@ -45,57 +45,18 @@ class StripeController extends Controller
                 ],
             ],
             'mode' => 'payment' , 
-            'success_url' => route('success'),
+            'success_url' => route('success', ['id' => $id]),
             'cancel_url'  => route('index' ),
-            'metadata' => [
-                'subscriptionId' => $id,
-            ]
+            
            
         ]);
-
-        return redirect()->away($session->url);
+        return redirect()->away($session->url); // Redirect user to payment page
+         
     }
 
-    public function handlewebhook(Request $request){
-        require 'vendor/autoload.php';
 
-        // The library needs to be configured with your account's secret key.
-        // Ensure the key is kept out of any version control system you might be using.
-        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-
-        // This is your Stripe CLI webhook secret for testing your endpoint locally.
-        $endpoint_secret = 'we_1O9TI8SEgI2391x6Xo6h6Ho5';
-
-        $payload = @file_get_contents('php://input');
-        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
-        $event = null;
-          
- 
-        print_r("Handle Webhook");
-
-
-        
-        try {
-        $event = \Stripe\Webhook::constructEvent(
-            $payload, $sig_header, $endpoint_secret
-        );
-        } catch(\UnexpectedValueException $e) {
-        // Invalid payload
-        http_response_code(400);
-        exit();
-        } catch(\Stripe\Exception\SignatureVerificationException $e) {
-        // Invalid signature
-        http_response_code(400);
-        exit();
-        }
-
-        // Handle the event
-        switch ($event->type) {
-        case 'checkout.session.completed':
-            $paymentIntent = $event->data->object;
-        // ... handle other event types
-            $subscriptionId  = $event->data->object->metadata['subscriptionId'];
-            $sub = SubScription::where('id',$subscriptionId)->first();
+    private function updateSubscriptionDB($id){
+        $sub = SubScription::where('id',$id)->first();
 
             // Check if the user already has an active subscription for this product
             $existingSubscription = UserSubscription::where([
@@ -108,26 +69,95 @@ class StripeController extends Controller
                 $currentDateTime = Carbon::now();
                 if($sub) {
                     $newSub = UserSubscription::create([
-                        'user_id' => auth()->user() ,
+                        'user_id' => auth()->user()->id ,
                         'subscription_id' => $sub->id,
-                        'purchase_date' => $currentDateTime->format('Y-m-d H:i:s') ,
+                        'purchase_date' =>  $currentDateTime->toDateTimeString(),
                         'is_active' => 1 ,
                     ]);
                     $newSub->save();
-                    return redirect()->route('success')->with('success' , 'Purchase Successful');
+                    return ;
                 }
-
             }
-
-        default:
-            echo 'Received unknown event type ' . $event->type;
-        }
-
-        http_response_code(200);
+            return;
     }
 
-    public function success(){
-        return redirect()->route('index');
+    // public function handlewebhook(Request $request){
+    //     require 'vendor/autoload.php';
+
+    //     // The library needs to be configured with your account's secret key.
+    //     // Ensure the key is kept out of any version control system you might be using.
+    //     $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+
+    //     // This is your Stripe CLI webhook secret for testing your endpoint locally.
+    //     $endpoint_secret = 'we_1O9TI8SEgI2391x6Xo6h6Ho5';
+
+    //     $payload = @file_get_contents('php://input');
+    //     $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+    //     $event = null;
+          
+ 
+    //     print_r("Handle Webhook");
+
+
+        
+    //     try {
+    //     $event = \Stripe\Webhook::constructEvent(
+    //         $payload, $sig_header, $endpoint_secret
+    //     );
+    //     } catch(\UnexpectedValueException $e) {
+    //     // Invalid payload
+    //     http_response_code(400);
+    //     exit();
+    //     } catch(\Stripe\Exception\SignatureVerificationException $e) {
+    //     // Invalid signature
+    //     http_response_code(400);
+    //     exit();
+    //     }
+
+    //     // Handle the event
+    //     switch ($event->type) {
+    //     case 'checkout.session.completed':
+    //         $paymentIntent = $event->data->object;
+    //     // ... handle other event types
+    //         $subscriptionId  = $event->data->object->metadata['subscriptionId'];
+    //         $sub = SubScription::where('id',$subscriptionId)->first();
+
+    //         // Check if the user already has an active subscription for this product
+    //         $existingSubscription = UserSubscription::where([
+    //             'user_id' => auth()->user()->id,
+    //             'subscription_id' => $sub->id,
+    //             'is_active' => 1,
+    //         ])->first();
+
+    //         if (!$existingSubscription) {
+    //             $currentDateTime = Carbon::now();
+    //             if($sub) {
+    //                 $newSub = UserSubscription::create([
+    //                     'user_id' => auth()->user() ,
+    //                     'subscription_id' => $sub->id,
+    //                     'purchase_date' => $currentDateTime->format('Y-m-d H:i:s') ,
+    //                     'is_active' => 1 ,
+    //                 ]);
+    //                 $newSub->save();
+    //                 return redirect()->route('success')->with('success' , 'Purchase Successful');
+    //             }
+
+    //         }
+
+    //     default:
+    //         echo 'Received unknown event type ' . $event->type;
+    //     }
+
+    //     http_response_code(200);
+    // }
+
+    public function success(Request $request , $id){
+        
+            // Payment was successful, update your database
+            $this->updateSubscriptionDB($id);
+            return redirect()->route('index')->with('success', 'Purchase Successful');
+       
+        
     }
 
 }
