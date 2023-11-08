@@ -25,7 +25,7 @@
   p a ion-icon{
     font-size: 30px;
     font-weight: 800;
-    color: rgb(122, 122, 122);
+    color: rgb(61, 61, 61);
   }
   .nav-pills{
     font-weight: 600;
@@ -34,7 +34,7 @@
   }
   p span{
     font-weight: 600;
-    color: rgb(46, 46, 46);
+    color: rgb(26, 25, 25);
   }
 </style>
 
@@ -161,11 +161,45 @@
                   <td>
                     <span class="badge badge-success rounded-pill d-inline">Active</span>
                   </td>
-                  <td>Senior</td>
                   <td>
-                    <button type="button" class="btn btn-link btn-sm btn-rounded">
+                    <a href="{{ route('updateblog' , ['id'=>$post->id]) }}" class="btn btn-link btn-sm btn-rounded">
                       Edit
-                    </button>
+                    </a>
+                  </td>
+                  <td>
+                    <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-outline-danger btn-sm btn-rounded" data-mdb-toggle="modal" data-mdb-target="#staticBackdrop">
+                    Delete
+                  </button>
+
+                  <!-- Modal -->
+                  <div
+                    class="modal fade"
+                    id="staticBackdrop"
+                    data-mdb-backdrop="static"
+                    data-mdb-keyboard="false"
+                    tabindex="-1"
+                    aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="staticBackdropLabel">Delete Post</h5>
+                          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">Do You Really Want to Delete this Post. All the Images Related to This Post Will Be Deleted !</div>
+                        <div class="modal-footer">
+                          <form action="{{ route('deleteBlogdb' , ['id=$post->id']) }}" method="post">
+                            @csrf
+                            @method('delete')
+                            <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                            <button type="Submit" class="btn btn-primary">Understood</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   </td>
                 </tr>
                 @else

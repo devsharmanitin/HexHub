@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LikeCommentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ChatController;
@@ -97,6 +98,20 @@ Route::controller(SubscriptionController::class)->group(function(){
 
     
 });
+
+
+
+Route::controller(LikeCommentController::class)->group(function(){
+   
+    Route::post('/post/{id}/like/' , 'likePost')->name('likePost');
+    Route::post('/post/{id}/dis_like', 'disLikePost')->name('disLikePost');
+    Route::post('/comment/{id}/add' , 'commentPost')->name('commentPost');
+    Route::put('/comment/{id}/update' , 'updateComment')->name('updateComment');
+    Route::delete('/destroy/{id}/Comment/' , 'destroyComment')->name('destroyComment');
+
+    
+});
+
 
 
 

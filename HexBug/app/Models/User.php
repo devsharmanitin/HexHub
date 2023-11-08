@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\models\Message;
+use App\Models\Comments;
 
 // Stripe Cashier 
 use Laravel\Cashier\Billable;
@@ -81,9 +82,17 @@ class User extends Authenticatable
     }
 
 
-        public function subscriptions(){
-            return $this->hasMany(UserSubscription::class);
-        }
+    public function subscriptions(){
+        return $this->hasMany(UserSubscription::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(Comments::class);
+    }
+
+    public function likes(){
+        return $this->hasMany(Likes::class);
+    }
 
        
 
