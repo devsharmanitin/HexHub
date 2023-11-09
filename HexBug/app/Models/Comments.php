@@ -20,7 +20,7 @@ class Comments extends Model
         return $this->belongsTo(Post::class);
     }
 
-    public function childcomments(){
+    public function replies(){
         return $this->hasMany(Comments::class , 'parent_id');
     }
 

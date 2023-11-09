@@ -256,6 +256,22 @@
     border: none;
     box-shadow: none;
   }
+  form button{
+    background: transparent;
+    border: none;
+    box-shadow: none
+  }
+  
+  .likex-csx{
+    float: right;
+  }
+  #replyform{
+    display: none;
+  }
+  .card-body{
+    padding: 0;
+    padding-left: 20px;
+  }
   
 </style>
 
@@ -362,19 +378,57 @@
           </div>
           <hr class="hr hr-blurry" >
           <div class="blog-social ">
+            @if (session('error'))
+            <div id="messageSession" class="alert alert-danger">
+              {{ session('error') }}
+            </div>
+            @elseif(session('success'))
+            <div id="messageSession" class="alert alert-success">
+              {{ session('success') }}
+            </div>
+            @endif
             <div class="px-3 mb-5">
-              @if($post->likes->contains($post->author->id))
-              <form action="{{ route('disLikePost' , ['id'=>$post->id]) }}" method="post">
-                @csrf
-                <button type="submit" class="likebtn mb-1 h5"><span> <i class="fa-solid fa-heart" style="color: #0aa0eb;"></i> </span></button>Disliked Post If Clicked
-              </form>
-              @else
-              <form action="{{ route('likePost' , ['id'=>$post->id]) }}" method="post">
-                @csrf
-                <button type="submit" class="likebtn mb-1 h5"><span> <i class="fa-regular fa-heart" style="color: #0aa0eb;"></i> </span></button>LIke Post If Clicked
-              </form>
-              @endif
-              <p class="small text-muted mb-0"><span class="Likes">{{ count($post->likes) }}</span></p>
+             
+             
+         
+            
+              
+
+
+
+              <div class="small d-flex justify-content-start">
+                @if($post->likes->contains('user_id', auth()->user()->id))
+                  <form action="{{ route('disLikePost' , ['id'=>$post->id]) }}" class="d-flex align-items-center me-3 mx-2" method="post">
+                      @csrf
+                      <button type="submit"><i class="fa-solid fa-thumbs-up"></i></button>
+                      <button> <p class="mb-0">Unlink</p></button>
+                  </form>
+                @else
+                  <form action="{{ route('likePost' , ['id'=>$post->id]) }}" method="post" class="d-flex align-items-center me-3 mx-2">
+                      @csrf
+                      <button type="submit"><i class="fa-regular fa-thumbs-up"></i></button>                                                                                        
+                      <button> <p class="mb-0">Like</p></button>
+                  </form>
+                @endif  
+                
+                
+                <a href="#!" class="d-flex align-items-center me-3">
+                  <i class="far fa-comment-dots me-2"></i>
+                  <p class="mb-0">Comment</p>
+                 
+                </a>
+               
+                <a href="#!" class="d-flex align-items-center me-3">
+                  <i class="fas fa-share me-2"></i>
+                  <p class="mb-0">Share</p>
+                </a>
+
+                <div class="likex-csx">
+                  <p class="small text-muted mb-0"><span class="Likes">{{ count($post->likes) }} Like</span></p>
+                </div>
+                
+              </div>
+              
             </div>
           </div>
          
@@ -442,25 +496,32 @@
                         <p class="text-muted small mb-0">
                           {{ $comment->comment }} !
                         </p>
+                        @if($comment->replies)
+                        <div class="replycomments">
+                          <p>{{$comment->comment}}</p>
+                        </div>
+                        @endif
                       </div>
+                     
                     </div>
         
                    
                     <div class="small d-flex justify-content-start">
+                     
                       <a href="#!" class="d-flex align-items-center me-3">
-                        <i class="far fa-thumbs-up me-2"></i>
-                        <p class="mb-0">Like</p>
+                        <form action="{{ route('commentPost' , ['id'=>$post->id]) }}" method="post" id="replyform">
+                          @csrf
+                          <input type="hidden" name="parentComment" value="{{$comment->id}}">
+                          <input type="text" name="comment" id="" class="form-control">
+                          <button type="submit">Reply</button>
+                        </form>
+                        <i class="far fa-comment-dots me-2" ></i>
+                        <p class="mb-0" id="replycomment">Reply</p>
                       </a>
-                      <a href="#!" class="d-flex align-items-center me-3">
-                        <i class="far fa-comment-dots me-2"></i>
-                        <p class="mb-0">Comment</p>
-                      </a>
-                      <a href="#!" class="d-flex align-items-center me-3">
-                        <i class="fas fa-share me-2"></i>
-                        <p class="mb-0">Share</p>
-                      </a>
+                     
                     </div>
                   </div>
+                  <hr>
                   @endforeach
                   
                 </div>
@@ -469,8 +530,6 @@
         
 
         <!-- comments  -->
-
-
 
 
       </div>
@@ -506,6 +565,11 @@
   </div>
 </section>
 
-
+<script>
+  document.getElementById("replycomment").addEventListener('click' , ()=>{
+    document.getElementById("replyform").style.display = 'block';
+    document.getElementById("replycomment").style.display = 'none';
+  })
+</script>
 
 @endsection
