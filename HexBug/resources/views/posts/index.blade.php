@@ -270,6 +270,77 @@ a:hover{
     <div class="row">
       <div class="col-8">
 
+
+      <!-- Searched Items  -->
+
+      @if (session('SearchItems'))
+      <div class="row blog-world-release mb-4">
+          <span class="bold"style="color: skyblue;" >Results</span>
+        </div>
+
+			@foreach (session('SearchItems') as $post)
+			<div class="all-blogs-structure mb-5">
+			<div class="author">
+				<div class="author-content">
+				<div class="author-profile-body">
+					<div class="author-img  px-2">
+					<img src="https://images.unsplash.com/photo-1697974375586-24a83dbbbde9?auto=format&fit=crop&q=80&w=1374&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+					</div>
+					
+					<div class="author-profile  px-4">
+					<a href="{{ route('getsingleuser' , ['id'=>$post->author_id]) }}"> <span class="px-3">{{ $post->author->name }}</span></a>
+					<br>
+					<span class="px-3 text-muted">{{ $post->author->status }}</span>
+					</div>
+				</div>
+				<div class="author-social-media">
+					<a href="{{ $post->author->github }}"><ion-icon name="logo-github"></ion-icon></a>
+					<a href="{{ $post->author->facebook }}"><ion-icon name="logo-facebook"></ion-icon></a>
+					<a href="{{ $post->author->instagram }}"><ion-icon name="logo-instagram"></ion-icon></a>
+				</div>
+				</div>
+			</div>
+			<a href="{{ route('postreadmore' , ['id'=>$post->id]) }}">
+				<div class="content">
+				<div class="main-content">
+					<h5 style="font-weight: 700;">{{ $post->post_title }}</h5>
+					<p style="font-weight: 600; font-size: 14px; color: rgb(90, 89, 89);">{{ implode(' ', array_slice(str_word_count($post->post_desc, 1), 0, 100)) }}</p>
+				</div>
+				<div class="img">
+					<img src="{{ asset('storage/'.$post->images[0]->url) }}">
+				</div>
+				</div>
+				@foreach ($post->tags as $tag)
+				<span class="badge m-1" style="background: whitesmoke;  font-size: 14px; font-weight: 700; color: #6c757d;  border: 1.5px solid rgb(56, 56, 56);"><a class="" href="/tag/Django" style="text-decoration: none; color: black;">{{$tag->tag}}</a></span>
+				@endforeach
+				
+			</a>
+			<div class="blog-common-detail my-3 px-2">
+				<div class="details">
+				<span class="px-1 text-muted"><ion-icon name="calendar-outline"></ion-icon> &nbsp;{{$post->created_at->format('d-m-Y')}}</span>
+				@if($post->created_at->format('h') <= 12)
+					<span class="px-1 text-muted"><ion-icon name="timer-outline"></ion-icon> &nbsp;{{ $post->created_at->format('h:i:s A') }}</span>
+				@else
+					<span class="px-1 text-muted"><ion-icon name="timer-outline"></ion-icon> &nbsp;{{ $post->created_at->format('h:i:s A') }}</span>
+				@endif
+
+				</div>
+				<div class="share-option ">
+				<a href=""><ion-icon name="logo-facebook"></ion-icon></a>
+				<a href=""><ion-icon name="link-outline"></ion-icon></a>
+				<a href=""><ion-icon name="logo-instagram"></ion-icon></a>
+				</div>
+			</div>
+			</div>
+			<hr class="hr hr-blurry" />
+			<hr class="hr hr-blurry" />
+
+
+			@endforeach
+		@endif
+
+      <!-- End searchd Items  -->
+
       @if (session('error'))
 			<div id="messageSession" class="alert alert-danger">
 				{{ session('error') }}

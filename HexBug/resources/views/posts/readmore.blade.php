@@ -508,16 +508,6 @@
                    
                     <div class="small d-flex justify-content-start">
                      
-                      <a href="#!" class="d-flex align-items-center me-3">
-                        <form action="{{ route('commentPost' , ['id'=>$post->id]) }}" method="post" id="replyform">
-                          @csrf
-                          <input type="hidden" name="parentComment" value="{{$comment->id}}">
-                          <input type="text" name="comment" id="" class="form-control">
-                          <button type="submit">Reply</button>
-                        </form>
-                        <i class="far fa-comment-dots me-2" ></i>
-                        <p class="mb-0" id="replycomment">Reply</p>
-                      </a>
                      
                     </div>
                   </div>

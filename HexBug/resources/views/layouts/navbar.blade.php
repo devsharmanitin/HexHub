@@ -86,7 +86,8 @@
       <!-- Left links -->
     </div>
     <!-- Collapsible wrapper -->
-
+    
+ 
     <!-- Right elements -->
     <div class="d-flex align-items-center">
       <!-- Icon -->
@@ -131,6 +132,14 @@
           </li>
         </ul>
       </div>
+
+
+      <div class="searchboc">
+      <button type="button" class="btn btn-link" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+          <i class="fa-sharp fa-solid fa-magnifying-glass fa-lg"></i>
+      </button>
+      </div>
+
       <!-- Avatar -->
       <div class="dropdown">
         <a
@@ -167,6 +176,7 @@
           </li>
         </ul>
       </div>
+      
     </div>
     <!-- Right elements -->
   </div>
@@ -179,3 +189,29 @@
 	</div>	
 </div>
 
+<!-- Button trigger modal -->
+
+<form action="{{ route('SearchBlog') }}" method="post">
+	@csrf
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title" id="exampleModalLabel">Search Content</h6>
+				<button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex">
+			<div class="form-outline">
+				<input type="search" id="form1" name="searchItem" class="form-control" placeholder="Type query" aria-label="Search" />
+				<label for="form1" class="form-label">Search Here </label>
+			</div>
+			<button type="submit" class="btn btn-secondary"> <i class="fa-sharp fa-solid fa-magnifying-glass fa-lg"></i> </button>
+			</div>
+			
+			</div>
+		</div>
+		</div>
+</form>
+
+		

@@ -85,14 +85,16 @@ class PostController extends Controller
                 'is_active' => 1,
             ])->where('purchase_date' ,'<=' , $currentDateTime->toDateTimeString())->get();
             if ($existingSubscription){
-              
-                return view('posts.create');
+                $content = "";
+                
+                return view('posts.create' , ['content'=> $content]);
             }else{
               
                 return redirect()->route('Subscriptionplans')->with('error','You Must Buy a Plan For More Posting');}
         }
         else{
-            return view('posts.create');
+            $content = "";
+            return view('posts.create' , ['content'=>$content]);
         }
     }
 
@@ -265,4 +267,30 @@ class PostController extends Controller
     public function SubScriptionPlans(){
         return view('posts.subscriptions');
     }
+
+
+
+    public function SearchBlog(Request $request){
+        $request->validate([
+            'searchItem' => 'required|'
+        ]);
+        
+        try{
+        $posts = Post::where("post_title","like","%".$request->searchItem."%")
+        ->orWhere("post_content","like","%".$request->searchItem."%")
+        ->orWhere("post_desc" , "like" , "%".$request->searchItem."%")
+        ->orWhere('author_id' , "like" , "%".$request->searchItem."%")
+        ->get();
+    }
+    catch(Exception $e) {
+        return $e;
+    }
+
+    return redirect()->route('index')->with("SearchItems", $posts);
+    }
+
+    
+
+
+
 }

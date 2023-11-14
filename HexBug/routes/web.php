@@ -37,6 +37,8 @@ Route::controller(PostController::class)->group(function(){
     Route::post('/post/{id}/blog' , 'tagpost')->name('tagpost')->middleware('auth');
     Route::get('/user/plans/view' , 'SubScriptionPlans')->name('subscriptionPlans');
 
+    Route::post('query/user/post/items' , 'SearchBlog')->name('SearchBlog');
+
 
 
 });
