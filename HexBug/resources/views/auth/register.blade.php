@@ -1,108 +1,129 @@
 @extends('layouts.app')
 @section('content')
-
 <style>
-  .gradient-custom-2 {
-/* fallback for old browsers */
-background: #fccb90;
+	.divider:after,
+	.divider:before {
+		content: "";
+		flex: 1;
+		height: 1px;
+		background: #eee;
+	}
 
-/* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+	.h-custom {
+		height: calc(100% - 73px);
+	}
 
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
-}
+	@media (max-width: 450px) {
+		.h-custom {
+			height: 100%;
+		}
+	}
 
-@media (min-width: 768px) {
-
-}
-@media (min-width: 769px) {
-.gradient-custom-2 {
-border-top-right-radius: .3rem;
-border-bottom-right-radius: .3rem;
-}
-}
+	* {
+		font-weight: 700;
+	}
 </style>
-<section class="vh-80 gradient-form" style="background-color: #eee;">
-    <div class="container py-5 h-80">
-      <div class="row d-flex justify-content-center align-items-center vh-80">
-        <div class="col-xl-10">
-          <div class="card rounded-3 text-black">
-            <div class="row g-0">
-              <div class="col-lg-6">
-                <div class="card-body p-md-5 mx-md-4">
-  
-                  <div class="text-center">
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp"
-                      style="width: 185px;" alt="logo">
-                    <h4 class="mt-1 mb-5 pb-1">We are The Lotus Team</h4>
-                  </div>
-  
-                  <form  method="post" action="{{ route('CreateUser') }}"  >
-                    @csrf
-                    <p>Please Register your account</p>
-  
-                    <div class="form-outline mb-4">
-                      <input type="text" id="form2Example11" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
-                        placeholder="Enter Name" />
-                        @if ($errors->has('name'))
-                                <span class="text-danger">{{ $errors->first('name') }}</span>
-                        @endif
-                    </div>
 
+@include('layouts.Navbar')
+<section class="vh-100">
+	<div class="container-fluid h-custom">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+			<div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+				<form action="" method="post">
+					@csrf
+					<div class="text-center mb-3">
+						<p>Sign in with:</p>
+						
 
-                    <div class="form-outline mb-4">
-                        <input type="email" id="form2Example22" name="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="Email Address" />
-                        
-                        @if ($errors->has('email'))
-                                <span class="text-danger">{{ $errors->first('email') }}</span>
-                        @endif
-                      </div>
-  
-                    <div class="form-outline mb-4">
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password here..." id="form2Example22" name="password">
-                        @if ($errors->has('password'))
-                                <span class="text-danger">{{ $errors->first('password') }}</span>
-                        @endif
-                    </div>
+						 <a href="{{ route('RedirectToGoogle') }}" class="btn btn-lg btn-block btn-primary" style="background-color: rgb(57, 142, 221) 101, 221; font-weight:400;">
+              <i class="fab fa-google me-2"></i> Sign in with google
+            </a>
 
+					</div>
 
-                    <div class="form-outline mb-4">
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Confirm Password" id="password_confirmation" name="password_confirmation">
-                        @if ($errors->has('password'))
-                                <span class="text-danger">{{ $errors->first('password') }}</span>
-                        @endif
-                    </div>
-  
-                    <div class="text-center pt-1 mb-5 pb-1">
-                      <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Sign Up
-                        </button>
-                      <a class="text-muted" href="#!">Forgot password?</a>
-                    </div>
-  
-                    <div class="d-flex align-items-center justify-content-center pb-4">
-                      <a href="{{ route('login') }}" class="mb-0 me-2">Already have an account?</a>
-                      <!-- <a href="{{}}" class="btn btn-outline-danger">Create new</button> -->
-                    </div>
-  
-                  </form>
-  
-                </div>
-              </div>
-              <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
-                <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                  <h4 class="mb-4">We are more than just a company</h4>
-                  <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+					<div class="divider d-flex align-items-center my-4">
+						<p class="text-center fw-bold mx-3 mb-0">Or</p>
+					</div>
 
+					@if (session('error'))
+					<div id="messageSession" class="alert alert-danger">
+						{{ session('error') }}
+					</div>
+				@elseif(session('success'))
+					<div id="messageSession" class="alert alert-success">
+						{{ session('success') }}
+					</div>
+				@endif
+
+					<!-- Email input -->
+					<div class="form-outline mb-4">
+						<input type="email" id="form3Example3" class="form-control form-control-lg"
+							name="email" placeholder="Enter a valid email address" />
+						<label class="form-label" for="form3Example3">Email address</label>
+					</div>
+
+					<!-- Password input -->
+					<div class="form-outline mb-4">
+						<input type="password" id="form3Example4" class="form-control form-control-lg"
+							name="password" placeholder="Enter password" />
+						<label class="form-label" for="form3Example4">Password</label>
+					</div>
+
+					<!-- Password input -->
+					<div class="form-outline mb-3">
+						<input type="password" id="form3Example5" class="form-control form-control-lg"
+							name="password_confirmation" placeholder="Enter password" />
+						<label class="form-label" for="form3Example5">Retype Password</label>
+					</div>
+
+					<div class="d-flex justify-content-between align-items-center">
+						<!-- Checkbox -->
+						<div class="form-check mb-0">
+							<input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
+							<label class="form-check-label" for="form2Example3">
+								Remember me
+							</label>
+						</div>
+						<a href="#!" class="text-body">Forgot password?</a>
+					</div>
+
+					<div class="text-center text-lg-start mt-4 pt-2">
+						<button type="submit" class="btn btn-primary btn-lg"
+							style="padding-left: 2.5rem; padding-right: 2.5rem;">Sign Up</button>
+						<p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="{{ route('login') }}"
+								class="link-danger">Login</a></p>
+					</div>
+
+				</form>
+			</div>
+			<div class="col-md-9 col-lg-6 col-xl-5">
+				<img src="https://img.freepik.com/free-vector/recruit-agent-analyzing-candidates_74855-4565.jpg?w=826&t=st=1699957378~exp=1699957978~hmac=754ae72e09dcd89b7eb4a3003c634d4ce78cb39b9edfba085d42137450db97c6"
+					class="img-fluid" alt="Sample image">
+			</div>
+
+		</div>
+	</div>
+
+</section>
+
+<script>
+	let ShowPassword = document.getElementById("form2Example3");
+	ShowPassword.addEventListener('click' , ()=>{
+		let passwordField = document.querySelector('#form3Example4');
+		let ConfirmPassField = document.querySelector("#form3Example5");
+	if (passwordField.type === "password") {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+	if (ConfirmPassField.type === "password"){
+		ConfirmPassField.type = "text";
+        } else {
+            ConfirmPassField.type = "password";
+        }
+	}
+	)
+	
+</script>
 
 @endsection

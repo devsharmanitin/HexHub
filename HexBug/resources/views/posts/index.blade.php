@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 
 
 
@@ -235,6 +236,11 @@ a:hover{
   width: none;
   text-align: center;
 }
+.share_button{
+  
+  border: none;
+  box-shadow: none;
+}
 
 
 </style>
@@ -326,6 +332,8 @@ a:hover{
 
 				</div>
 				<div class="share-option ">
+     
+   
 				<a href=""><ion-icon name="logo-facebook"></ion-icon></a>
 				<a href=""><ion-icon name="link-outline"></ion-icon></a>
 				<a href=""><ion-icon name="logo-instagram"></ion-icon></a>
@@ -405,7 +413,8 @@ a:hover{
 
             </div>
             <div class="share-option ">
-              <a href=""><ion-icon name="logo-facebook"></ion-icon></a>
+               
+              <a href="" onclick="shareOnFacebook()"><ion-icon class="share_button " name="logo-facebook"></ion-icon></a>
               <a href=""><ion-icon name="link-outline"></ion-icon></a>
               <a href=""><ion-icon name="logo-instagram"></ion-icon></a>
             </div>
@@ -474,6 +483,24 @@ a:hover{
 </section>
 
 
+  <script>
+    window.fbAsyncInit = function() {
+    FB.init({
+      appId: '734522595124944',
+      autoLogAppEvents: true,
+      xfbml: true,
+      version: 'v12.0'
+    });
+  };
+
+  function shareOnFacebook() {
+    FB.ui({
+      method: 'share',
+      href: "{{ route('PostShare' , ['id'=>$post->id]) }}", // Replace with the URL you want to share
+    }, function(response){});
+  }
+
+</script>
 
 
 

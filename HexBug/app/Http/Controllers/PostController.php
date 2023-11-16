@@ -289,6 +289,25 @@ class PostController extends Controller
     return redirect()->route('index')->with("SearchItems", $posts);
     }
 
+
+
+    public function PostShare(Request $request, $id) {
+    $post = Post::find($id);
+
+    if (!$post) {
+        // Handle case where post is not found
+        return response()->json(['error' => 'Post not found'], 404);
+    }
+
+    $postData = [
+        'title' => $post->post_title,
+        'url' => route('postreadmore', ['id' => $post->id]), // Adjust the route name as needed
+        'image' => asset('storage/' . $post->images[0]->url), // Adjust the image URL as needed
+    ];
+
+    return response()->json(['post' => $postData]);
+}
+
     
 
 

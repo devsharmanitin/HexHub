@@ -441,82 +441,110 @@
        
 
 
-
-        
-            <div class="row d-flex justify-content-center">
-              <div class="col-md-12 col-lg-12 col-xl-12">
-                <div class="card">
-                  <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
-                    
-                    <div class="d-flex flex-start w-100 mb-4">
-                      <img class="rounded-circle shadow-1-strong me-3"
+<div class="row d-flex justify-content-center">
+    <div class="col-md-12 col-lg-12 col-xl-12">
+        <div class="card">
+            <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+                <div class="d-flex flex-start w-100 mb-4">
+                    <img class="rounded-circle shadow-1-strong me-3"
                         src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="40"
                         height="40" />
-                        <div>
-                          <h6 class="fw-bold text-primary mb-1">{{ $post->author->name }}</h6>
-                          <p class="text-muted small mb-0">
+                    <div>
+                        <h6 class="fw-bold text-primary mb-1">{{ $post->author->name }}</h6>
+                        <p class="text-muted small mb-0">
                             Comment
-                          </p>
-                        </div>
-                        
+                        </p>
                     </div>
-                    <form action="{{ route('commentPost',['id'=>$post->id]) }}" method="post">
+                </div>
+                <form action="{{ route('commentPost', ['id' => $post->id]) }}" method="post">
+                    @csrf
                     <div class="d-flex flex-start w-100">
-                        @csrf
-                      <div class="msgx w-75">
-                        <div class="form-outline">
-                          <textarea class="form-control" name="comment" id="textAreaExample" rows="1"
-                          style="background: #fff;"></textarea>
-                          <label class="form-label" for="textAreaExample">Message</label>
+                        <div class="msgx w-75">
+                            <div class="form-group">
+                                <textarea class="form-control" name="comment" rows="1"
+                                    style="background: #fff;"></textarea>
+                            </div>
                         </div>
-                      </div>
-                      <div>
-                        <button type="submit" class="btn btn-link btn-link-success"><ion-icon name="send"></ion-icon></button>
-                      </div>
-                    </div>                   
-                  </form>
-                  </div>
-                  <!-- Comments Section  -->
-                
-                  @foreach($post->comments as $comment)
-                 
-                  <div class="card-body">
-                    <div class="d-flex flex-start align-items-center">
-                      @if($comment->user->image)
-                      <img class="rounded-circle shadow-1-strong me-3"
-                        src="{{ asset('storage/'. $comment->user->image) }}" alt="avatar" width="40"
-                        height="40" style="object-fit: cover;" />
-                        @else
-                        <img class="rounded-circle shadow-1-strong me-3"
+                        <div>
+                            <button type="submit" class="btn btn-primary">Comment</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Comments Section  -->
+
+            @foreach($post->comments as $comment)
+            <div class="card-body">
+                <div class="d-flex flex-start align-items-center">
+                    @if($comment->user->image)
+                    <img class="rounded-circle shadow-1-strong me-3"
+                        src="{{ asset('storage/'. $comment->user->image) }}" alt="avatar" width="40" height="40"
+                        style="object-fit: cover;" />
+                    @else
+                    <img class="rounded-circle shadow-1-strong me-3"
                         src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="40"
                         height="40" />
-                        @endif
-                      <div>
+                    @endif
+                    <div>
                         <h6 class="fw-bold text-primary mb-1">{{ $comment->user->name }}</h6>
                         <p class="text-muted small mb-0">
-                          {{ $comment->comment }} !
+                            {{ $comment->comment }}
                         </p>
-                        @if($comment->replies)
-                        <div class="replycomments">
-                          <p>{{$comment->comment}}</p>
-                        </div>
-                        @endif
-                      </div>
-                     
+                        <!-- Reply Button -->
+                        <button type="button" class="btn btn-link" data-toggle="collapse"
+                            data-target="#replyForm{{$comment->id}}" aria-expanded="false"
+                            aria-controls="replyForm{{$comment->id}}">
+                            Reply
+                        </button>
                     </div>
-        
-                   
-                    <div class="small d-flex justify-content-start">
-                     
-                     
-                    </div>
-                  </div>
-                  <hr>
-                  @endforeach
-                  
                 </div>
-              </div>
+                <!-- Reply Form (Initially Hidden) -->
+                <div class="collapse" id="replyForm{{$comment->id}}">
+                    <form action="{{ route('commentPost', ['id' => $post->id]) }}" method="post">
+                        @csrf
+                        <input type="hidden" name="parentComment" value="{{ $comment->id }}">
+                        <div class="form-group">
+                            <textarea class="form-control" name="comment" rows="1"
+                                style="background: #fff;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Reply</button>
+                    </form>
+                </div>
+                <!-- Display replies for this comment -->
+                @if($comment->replies)
+                <div class="replycomments">
+                    <p>{{ $comment->comment }}</p>
+                    @foreach($comment->replies as $reply)
+                    <div class="d-flex flex-start align-items-center">
+                        <!-- Add the necessary information for replies -->
+                        @if($reply->user->image)
+                        <img class="rounded-circle shadow-1-strong me-3"
+                            src="{{ asset('storage/'. $reply->user->image) }}" alt="avatar" width="40" height="40"
+                            style="object-fit: cover;" />
+                        @else
+                        <img class="rounded-circle shadow-1-strong me-3"
+                            src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="40"
+                            height="40" />
+                        @endif
+                        <div>
+                            <h6 class="fw-bold text-primary mb-1">{{ $reply->user->name }}</h6>
+                            <p class="text-muted small mb-0">
+                                {{ $reply->comment }}
+                            </p>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
             </div>
+            <hr>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+        
+        
         
 
         <!-- comments  -->

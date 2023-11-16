@@ -3,12 +3,14 @@
 use App\Http\Controllers\LikeCommentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\SubscriptionController;
+use Laravel\Socialite\Facades\Socialite;
 
 
 /*
@@ -25,6 +27,16 @@ use App\Http\Controllers\SubscriptionController;
 
 // Route::get('/' , [PostController::class , 'index'])->name('index');
 
+Route::controller(GoogleController::class)->group(function(){
+    Route::get('/auth/redirect/google' , 'RedirectToGoogle')->name('RedirectToGoogle');
+    Route::get('auth/google/callback',  'handleGoogleCallback')->name('handleGoogleCallback');
+});
+
+Route::controller(FacebookController::class)->group(function(){
+    Route::get('/auth/redirect/facebook' , 'RedirectToFacebook')->name('RedirectToFacebook');
+    Route::get('/auth/facebook/callback',  'handleFacebookCallback')->name('handleFacebookCallback');
+});
+
 Route::controller(PostController::class)->group(function(){
     Route::get('/' , 'index' )->name('index')->middleware('auth');
     Route::get('/createblogtemp' , 'createblogtemp')->name('createblog')->middleware('auth');
@@ -38,6 +50,7 @@ Route::controller(PostController::class)->group(function(){
     Route::get('/user/plans/view' , 'SubScriptionPlans')->name('subscriptionPlans');
 
     Route::post('query/user/post/items' , 'SearchBlog')->name('SearchBlog');
+    Route::get('post/{id}/share' , 'PostShare')->name('PostShare');
 
 
 
@@ -113,6 +126,10 @@ Route::controller(LikeCommentController::class)->group(function(){
 
     
 });
+
+
+
+
 
 
 

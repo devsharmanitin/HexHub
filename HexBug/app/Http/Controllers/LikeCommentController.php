@@ -67,29 +67,35 @@ class LikeCommentController extends Controller
     }
 
 
-    public function commentPost(Request $request ,$id){
-        $request->validate([
-            'comment' => 'required|max:400',
-        ]);
-        $post = Post::find($id);
+    public function commentPost(Request $request, $id)
+{
+    $request->validate([
+        'comment' => 'required|max:400',
+    ]);
 
-        if(!$post){
-            return redirect()->back()->with('error' , 'No Post Found');
-        }
-        $user = auth()->user();
+    $post = Post::find($id);
 
-        $comment = Comments::create([
-            'user_id' => $user->id , 
-            'post_id' => $post->id ,
-            'comment' => $request->comment ,
-        ])->first();
-        if($request->parentComment){
-            $comment->parent_id = $request->parentComment;
-        }
-        $comment->save();
-        return redirect()->back()->with('success' , 'commented Successfully');
-
+    if (!$post) {
+        return redirect()->back()->with('error', 'No Post Found');
     }
+
+    $user = auth()->user();
+
+    $comment = new Comments([
+        'user_id' => $user->id,
+        'post_id' => $post->id,
+        'comment' => $request->comment,
+    ]);
+
+    if ($request->parentComment) {
+        $parentComment = Comments::find($request->parentComment);
+        $comment->parent()->associate($parentComment);
+    }
+
+    $comment->save();
+
+    return redirect()->back()->with('success', 'Commented Successfully');
+}   
 
 
     public function updateComment(Request $request , $id){
