@@ -15,8 +15,8 @@ use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable  ;
-    
+    use HasApiTokens, HasFactory, Notifiable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +24,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
     ];
@@ -50,56 +49,53 @@ class User extends Authenticatable
     ];
 
     protected $nullable = [
-        'username' ,
+        'username',
         'address',
         'gender',
         'number',
         'status',
         'image',
-   
+
     ];
 
-    public function posts(){
-        return $this->hasMany(Post::class , 'author_id');
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'author_id');
     }
 
     // users that are followed by this user
-    public function following() {
+    public function following()
+    {
         return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id')
             ->wherePivot('status', 'accepted');
     }
-    
 
-    public function follower(){
-        return $this->belongsToMany(User::class , 'followers' , 'follower_id' , 'following_id')
+
+    public function follower()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id')
             ->wherePivot('status', 'accepted');
     }
 
-    public function pendingrequest(){
-        return $this->belongsToMany(User::class,'follow_request','following_id','follower_id')
-            ->wherePivot('status' , 'pending');
-
+    public function pendingrequest()
+    {
+        return $this->belongsToMany(User::class, 'follow_request', 'following_id', 'follower_id')
+            ->wherePivot('status', 'pending');
     }
 
 
-    public function subscriptions(){
+    public function subscriptions()
+    {
         return $this->hasMany(UserSubscription::class);
     }
 
-    public function comments(){
+    public function comments()
+    {
         return $this->hasMany(Comments::class);
     }
 
-    public function likes(){
+    public function likes()
+    {
         return $this->hasMany(Likes::class);
     }
-
-       
-
-    
-
-    
 }
-
-
-

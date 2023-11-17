@@ -488,7 +488,7 @@
                     <div>
                         <h6 class="fw-bold text-primary mb-1">{{ $comment->user->name }}</h6>
                         <p class="text-muted small mb-0">
-                            {{ $comment->comment }}
+                            {{ $comment->content }}
                         </p>
                         <!-- Reply Button -->
                         <button type="button" class="btn btn-link" data-toggle="collapse"
@@ -513,7 +513,7 @@
                 <!-- Display replies for this comment -->
                 @if($comment->replies)
                 <div class="replycomments">
-                    <p>{{ $comment->comment }}</p>
+                    <p>{{ $comment->content }}</p>
                     @foreach($comment->replies as $reply)
                     <div class="d-flex flex-start align-items-center">
                         <!-- Add the necessary information for replies -->
@@ -529,7 +529,7 @@
                         <div>
                             <h6 class="fw-bold text-primary mb-1">{{ $reply->user->name }}</h6>
                             <p class="text-muted small mb-0">
-                                {{ $reply->comment }}
+                                {{ $reply->content }}
                             </p>
                         </div>
                     </div>

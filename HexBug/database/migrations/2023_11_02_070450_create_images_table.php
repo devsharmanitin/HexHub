@@ -15,8 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('url');
             $table->text('desc');
-            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('post_id')->nullable();
+            $table->unsignedBigInteger('discussion_id')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('images', function (Blueprint $table) {
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+            $table->foreign('discussion_id')->references('id')->on('discussion')->onDelete('cascade');
         });
     }
 

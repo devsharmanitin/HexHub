@@ -19,6 +19,10 @@ return new class extends Migration
             $table->unsignedBigInteger('author_id');
             $table->timestamps();
         });
+
+        Schema::table('posts' , function (Blueprint $table){
+            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
+        });
     }
 
     /**

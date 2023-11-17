@@ -8,11 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Images extends Model
 {
     use HasFactory;
-    protected $table = 'images';                                                                                                                                                                                                                                                                                                        
+    protected $table = 'images';
+
     protected $fillable = [
-        'url' , 'post_id'  , 'desc'
+        'url', 'desc'
     ];
-    public function post(){
-        return $this->belongsTo(Post::class , 'post_id');
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
+
+    public function discussion()
+    {
+        return $this->belongsTo(Discussion::class);
+    }
 }

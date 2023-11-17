@@ -13,17 +13,18 @@ use Illuminate\Support\Facades\Auth;
 class FollowController extends Controller
 {
     // sent follow request
-    public function followrequestsend($id){
+    public function followrequestsend($id)
+    {
         $receiver = User::find($id);   // the user who receives the Follow Request
         $sender  = auth()->user();   // user who send the request
         // DD($sender->id , $receiver->id);
 
-        if (FollowRequest::where('follower_id',$receiver->id)
-            ->where('following_id' , $sender->id)
-            ->exists()){
+        if (FollowRequest::where('follower_id', $receiver->id)
+            ->where('following_id', $sender->id)
+            ->exists()
+        ) {
             return back()->with('error', 'Request Already Sent');
-        }
-        else{
+        } else {
             $request = new FollowRequest;
             $request->follower_id = $receiver->id;
             $request->following_id = $sender->id;
@@ -31,10 +32,10 @@ class FollowController extends Controller
             $request->save();
             return back()->with('success', 'Request Sent');
         }
-
     }
 
-    public function followrequestreceive(){
+    public function followrequestreceive()
+    {
         $user = auth()->user();
         $pendingrequests = FollowRequest::where([
             'follower_id' => $user->id,
@@ -46,42 +47,44 @@ class FollowController extends Controller
 
 
     // accept follow request 
-    public function acceptfollowrequest($id){
+    public function acceptfollowrequest($id)
+    {
         $receiver = auth()->user();
         $sender = User::find($id);
         // DD($receiver->id , $sender->id);
 
         $followrequest = FollowRequest::where([
-            'follower_id' =>  $receiver->id, 
-            'following_id' => $sender->id  , 
-            'status'=> 'pending'
+            'follower_id' =>  $receiver->id,
+            'following_id' => $sender->id,
+            'status' => 'pending'
         ])->first();
         if ($followrequest) {
             $followrequest->status = 'accepted';
             $followrequest->save();
-    
+
             $request = new Follower([
                 'follower_id' => $receiver->id,
                 'following_id' => $sender->id,
                 'status' => 'accepted'
             ]);
             $request->save();
-    
+
             return back()->with('success', "{$sender->name} is now following you");
         }
-    
+
         return back()->with('error', 'Request not found or already accepted');
     }
 
 
-    public function rejectfollowrequest($id){
+    public function rejectfollowrequest($id)
+    {
         $receiver = auth()->user();
         $sender = User::find($id);
 
         $followrequest = FollowRequest::where([
-            'follower_id' =>  $receiver->id, 
-            'following_id' =>   $sender->id, 
-            'status'=> 'pending'
+            'follower_id' =>  $receiver->id,
+            'following_id' =>   $sender->id,
+            'status' => 'pending'
         ])->first();
         if ($followrequest) {
             $followrequest->delete();
@@ -92,96 +95,91 @@ class FollowController extends Controller
 
 
 
-    public function unfollowuser($id){
+    public function unfollowuser($id)
+    {
         $followedUser = User::find($id);
         $user = auth()->user();
         $followuser = Follower::where([
-            'following_id' => $user->id , 
-            'follower_id' => $followedUser->id , 
+            'following_id' => $user->id,
+            'follower_id' => $followedUser->id,
             'status' => 'accepted'
         ]);
-        if($followuser){
+        if ($followuser) {
             $followuser->delete();
-            return redirect()->route('index')->with('success' , 'Unfollow User Successfully');
+            return redirect()->route('index')->with('success', 'Unfollow User Successfully');
         }
     }
 
 
     // get the list of all followers 
 
-    public function followers($id){
+    public function followers($id)
+    {
         $user = User::find($id);
         $followers = $user->follower()->get();
         return $followers;
     }
 
     // get the list of all followers 
-    public function following($id){
+    public function following($id)
+    {
         $user = User::find($id);
         $followings = $user->following()->get();
         return $followings;
     }
 
 
-    public function showusers($id){
+    public function showusers($id)
+    {
         $users = User::find($id);
         $fc = new FollowController;
         $followers = $this->followers($id);
         $following = $this->following($id);
-        return view('posts.userprofile'  , ['followers',$followers , 'followings',$following ]);
-
-
+        return view('posts.userprofile', ['followers', $followers, 'followings', $following]);
     }
 
-    public function getsingleuser($id){
-        if(Auth::Check()){
+    public function getsingleuser($id)
+    {
+        if (Auth::Check()) {
             // $user = auth()->user();
             $user = User::find($id);
             $posts = Post::all();
             $followers = $this->followers($id);
             $following = $this->following($id);
-            return view('profile.showuserprofile' , ['user'=>$user , 'followers'=>$followers , 'followings'=>$following , 'posts'=>$posts]);
-            }
-        else{
-            return redirect()->route('login');  
+            return view('profile.showuserprofile', ['user' => $user, 'followers' => $followers, 'followings' => $following, 'posts' => $posts]);
+        } else {
+            return redirect()->route('login');
         }
     }
 
 
-    public function friendsuser(){
+    public function friendsuser()
+    {
         $user = auth()->user();
-        $friends = Follower::where(function ($query) use ($user){
+        $friends = Follower::where(function ($query) use ($user) {
             $query->where('following_id', $user->id)
-            ->orWhere('follower_id', $user->id)
-            ->where('status','accepted');
+                ->orWhere('follower_id', $user->id)
+                ->where('status', 'accepted');
         })->with('user')->get();
         return $friends;
     }
-    
 
-    public function friendscontact(){
+
+    public function friendscontact()
+    {
         $user = auth()->user();
         $userid = $user->id;
-        $friendsusers = User::whereNotIn('id' , function($query) use ($userid){
+        $friendsusers = User::whereNotIn('id', function ($query) use ($userid) {
             $query
-            ->select('following_id')
-            ->from('followers')
-            ->where('follower_id' , $userid);
+                ->select('following_id')
+                ->from('followers')
+                ->where('follower_id', $userid);
         })->get();
-        $users = $friendsusers->filter(function($newuser) use ($user){
+        $users = $friendsusers->filter(function ($newuser) use ($user) {
             return $newuser->id != $user->id;
         });
         $friends = $this->friendsuser();
         $followrequest = $this->followrequestreceive();
-        return view('profile.contact' , ['friends'=>$friends ,  'users'=>$users , 'followrequests'=>$followrequest   ]);
+        return view('profile.contact', ['friends' => $friends,  'users' => $users, 'followrequests' => $followrequest]);
     }
-
-
-    
-
-
-    
-
-
-
 }
