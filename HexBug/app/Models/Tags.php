@@ -5,18 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PostTags;
+use Illuminate\Support\Str;
 
 
 class Tags extends Model
 {
     use HasFactory;
 
-    protected $table = 'tags';    
+    protected $table = 'tags';
     protected $fillable = [
-        'tag' 
+        'tag'
     ];
 
-    public function posts(){
-        return $this->belongsToMany(Post::class,'post_tag');
+
+
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class, 'post_tag');
     }
 }

@@ -11,7 +11,7 @@
 		font-weight: 700;
 	}
 </style>
-DisCusiion List
+
 <!--Main Navigation-->
 <header>
 	<!-- Intro settings -->

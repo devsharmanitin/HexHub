@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('views_count')->default(0);
             $table->integer('replies_count')->default(0);
             $table->timestamp('last_reply_at')->nullable();
+           
 
             $table->timestamps();
         });

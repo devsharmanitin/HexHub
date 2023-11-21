@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();                                                                      
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('post_id')->nullable();
             $table->timestamps();
         });
@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreign('post_id')->references('id')->on('posts');
             $table->foreign('user_id')->references('id')->on('users');
         });
-
     }
 
     /**

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
+@vite('resources/css/app.css')
 
 <style>
 	#imageroe {
@@ -25,7 +26,7 @@
 		color: white;
 	}
 </style>
-DisCusiion List
+
 <!--Main Navigation-->
 <header>
 	<!-- Intro settings -->
@@ -45,6 +46,7 @@ DisCusiion List
 
 </header>
 <!--Main Navigation-->
+
 
 <!--Main layout-->
 <main class="my-5">
@@ -144,7 +146,9 @@ DisCusiion List
 								</div>
 								<div>
 									<button type="button" class="btn btn-outline-dark btn-rounded btn-sm" data-mdb-ripple-color="dark">Reply</button>
-									<button type="button" class="btn btn-outline-dark btn-rounded btn-sm" data-mdb-ripple-color="dark">See profile</button>
+									<button type="button" class="btn btn-outline-dark btn-rounded btn-sm" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#EditDiscussionModal{{ $discussion->id }}">
+										Edit Discussion
+									</button>
 									<button type="button" class="btn btn-outline-dark btn-floating btn-sm" data-mdb-ripple-color="dark"><i class="fas fa-comment"></i></button>
 								</div>
 							</div>
@@ -187,47 +191,82 @@ DisCusiion List
 									</div>
 									<div class="flex-shrink-0">
 
-										<button type="button" class="btn btn-outline-dark btn-rounded btn-sm" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#AnswerModal">
+										<button type="button" class="btn btn-outline-dark btn-rounded btn-sm" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#AnswerModal{{ $childDiscussion->id }}">
 											Answer btn
 										</button>
 
-										<!-- Answer Discussion Modal -->
-										<div class="modal fade" id="AnswerModal" tabindex="-1" aria-labelledby="AnswerModalLabel" aria-hidden="true">
-											<div class="modal-dialog modal-dialog-centered modal-lg">
-												<div class="modal-content">
-													<form action="{{ route('DiscussionCreate') }}" method="post">
-														@csrf
-														<input type="hidden" value="{{ $childDiscussion->id }}" name="parent_id">
-														<div class="modal-header">
 
-														</div>
-														<div class="modal-body">
-															<div class="form-outline">
-																<input type="text" value="{{$childDiscussion->id}}">
-																<textarea class="form-control" name="content" id="textAreaExample1" rows="4"></textarea>
-																<label class="form-label" for="textAreaExample">Answer brief</label>
-															</div>
-														</div>
-														<div class="modal-footer">
-															<button type="submit" class="btn btn-success">Post Answer</button>
-														</div>
-													</form>
-												</div>
-											</div>
-										</div>
-										<!-- End Answer Modal  -->
+
+
+										<!--------------------------------------- child discussion form --------------------------------- -->
+
+
+
+										<!---------------------------------- end child ------------------------ -->
 
 
 									</div>
 								</div>
 
 							</div>
+							<livewire:comments :model="$childDiscussion" />
 							<ul>
+								@foreach($childDiscussion->children as $reply)
+
 								<li>
-									@foreach($discussion->replies as $reply)
-									<p>{{ $reply->content }}</p>
-									@endforeach
+									<div class="d-flex align-items-start mb-4">
+										<div class="flex-shrink-0">
+											<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp" alt="Generic placeholder image" class="img-fluid rounded-circle border border-dark border-3" style="width: 40px;">
+										</div>
+										<div class="flex-grow-1 ms-3">
+											<div class="d-flex flex-row align-items-center mb-2">
+												<p class="mb-0 me-2">{{$reply->user->name}}</p>
+												<ul class="mb-0 list-unstyled d-flex flex-row" style="color: #1B7B2C;">
+													<li>
+														<i class="fas fa-star fa-xs"></i>
+													</li>
+													<li>
+														<i class="fas fa-star fa-xs"></i>
+													</li>
+													<li>
+														<i class="fas fa-star fa-xs"></i>
+													</li>
+													<li>
+														<i class="fas fa-star fa-xs"></i>
+													</li>
+													<li>
+														<i class="fas fa-star fa-xs"></i>
+													</li>
+												</ul>
+											</div>
+											<div>
+												<p>{{ $reply->content }} yyyyyyyyyyyyyyyy</p>
+											</div>
+											<div class="flex-shrink-0">
+
+												<button type="button" class="btn btn-outline-dark btn-rounded btn-sm" data-mdb-ripple-color="dark" data-mdb-toggle="modal" data-mdb-target="#AnswerModal{{ $reply->id }}">
+													Answer btn
+												</button>
+
+
+
+
+												<!--------------------------------------- child discussion form --------------------------------- -->
+
+
+
+												<!---------------------------------- end child ------------------------ -->
+
+
+											</div>
+										</div>
+
+									</div>
+
 								</li>
+								<livewire:comments :model="$reply" />
+
+								@endforeach
 							</ul>
 
 							<!-- Add other fields as needed -->
@@ -311,11 +350,82 @@ DisCusiion List
 
 <!-- End Add Modal Discussion  -->
 
+<!-- tailwind modal Edit  -->
+
+<div class="modal fade" id="EditDiscussionModal{{ $discussion->id }}" tabindex="-1" aria-labelledby="AnswerModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+
+			@csrf
+			<input type="hidden" value="{{ $discussion->id }}" name="parent_id">
+			<div class="modal-header">
+
+			</div>
+			<div class="modal-body">
+				<button id="EditDiscussionImages" onclick="imageaddfxn()">Add Images</button>
+
+				<form action="{{ route('DiscussionUpdate' , ['id'=>$discussion->id]) }}" enctype="multipart/form-data">
+					@method('PUT')
+					@csrf
+					<div class="form-outline mb-4">
+						<input type="text" name="title" id="form1Example1" value="{{$discussion->title}}" class="form-control" />
+						<label class="form-label" for="form1Example1">Topic</label>
+					</div>
+
+					<!-- Password input -->
+					<div class="form-outline">
+						<textarea class="form-control" name="content" id="textAreaExample1" rows="4">{{$discussion->content}}</textarea>
+						<label class="form-label" for="textAreaExample">Discription</label>
+					</div>
+
+					<div class="imageroe" id="addimagedata"></div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Add To Discussion</button>
+					</div>
+
+				</form>
+
+			</div>
 
 
+		</div>
+	</div>
+</div>
+
+<!-- end tailwind Modal  -->
 <!-- Button trigger modal -->
 
 
+<!-- Answer Discussion Modal -->
+@foreach($childDiscussions as $childDiscussion)
+<div class="modal fade" id="AnswerModal{{ $childDiscussion->id }}" tabindex="-1" aria-labelledby="AnswerModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<form action="{{ route('DiscussionCreate') }}" method="post">
+				@csrf
+				<input type="hidden" value="{{ $childDiscussion->id }}" name="parent_id">
+				<div class="modal-header">
+
+				</div>
+				<div class="modal-body">
+					<div class="form-outline">
+
+						<textarea class="form-control" name="content" id="textAreaExample1" rows="4"></textarea>
+						<label class="form-label" for="textAreaExample">Answer brief</label>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success">Post Answer</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+@endforeach
+<!-- End Answer Modal  -->
 
 
 
@@ -352,11 +462,43 @@ DisCusiion List
 		imageroe.style.display = 'block';
 
 		counter += 1;
+	});
 
 
+	function imageaddfxn() {
 
 
-	})
+		counter = 0
+
+		const imageInput = document.createElement('input');
+		imageInput.type = 'file';
+		imageInput.classList.add('form-control', 'imagesclasses');
+		imageInput.name = 'discussionImage' + counter; // Use "images[]" to make it an array
+		imageInput.id = 'image' + counter;
+
+
+		const descinput = document.createElement('input');
+		descinput.type = 'text';
+		descinput.classList.add('form-control', 'descs');
+		descinput.id = 'desc' + counter;
+		descinput.name = 'imageDiscussion' + counter;
+		const label = document.createElement('label');
+		label.setAttribute('for', 'desc ' + counter); // Set the '
+		label.textContent = 'Description';
+
+
+		const imagefilerow = document.createElement('div');
+		imagefilerow.classList.add('row');
+		imagefilerow.appendChild(imageInput);
+		imagefilerow.append(label, descinput);
+
+		console.log("Function runinngd");
+		let imageroe = document.getElementById('addimagedata');
+		imageroe.append(imagefilerow);
+		imageroe.style.display = 'block';
+
+		counter += 1;
+	};
 </script>
 
 

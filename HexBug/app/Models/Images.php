@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Images extends Model
 {
@@ -13,6 +14,7 @@ class Images extends Model
     protected $fillable = [
         'url', 'desc'
     ];
+
 
 
     public function post()

@@ -140,7 +140,12 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                 <li>
-                  <a class="dropdown-item" href="{{ route('RequestUser') }}" style="font-weight: 600;">My profile</a>
+                  @if(auth()->check())
+                  <a class="dropdown-item" href="{{ route('RequestUser', ['slug' => auth()->user()->slug]) }}" style="font-weight: 600;">My profile</a>
+                  @else
+                  <!-- Handle the case when the user is not authenticated, e.g., display a login link -->
+                  <a class="dropdown-item" href="{{ route('login') }}" style="font-weight: 600;">Login</a>
+                  @endif
                 </li>
                 <li>
                   <a class="dropdown-item" href="#" style="font-weight: 600;">Settings</a>

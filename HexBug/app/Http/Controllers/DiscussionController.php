@@ -17,7 +17,7 @@ class DiscussionController extends Controller
 
     public function DiscussionList()
     {
-        $discussions = Discussion::all();
+        $discussions = Discussion::whereNull('parent_id')->get();
         $context = [
             'discussions' => $discussions
         ];
@@ -72,6 +72,54 @@ class DiscussionController extends Controller
     }
 
 
+
+
+    public function DiscussionUpdate(Request $request, $id)
+    {
+
+
+        $user = auth()->user();
+
+        // Discussion Started -----------------------
+        $discussion = Discussion::find($id);
+
+        if ($request->title) {
+            $discussion->title = $request->title;
+        }
+        if ($request->content) {
+            $discussion->content = $request->content;
+        }
+        if ($request->category_id) {
+            $discussion->category_id = $request->category_id;
+        }
+        if ($request->parent_id) {
+            $discussion->parent_id = $request->parent_id;
+        }
+        $discussion->save();
+
+
+        // Discussion ENd ----------------------
+        // --------- Discussion Images started ---------------
+        if (count($request->files) >= 1) {
+            for ($i = 0; $i < count($request->files); $i++) {
+                $imgefilename = 'discussionImage' . $i;
+                $imagePath = str_replace('public/', '', $request->file($imgefilename)->store('public/images/discussion'));
+                $desc =  $request->input("imageDiscussion" . $i);
+
+                // Create Images added to discusiion 
+                $images = new Images([
+                    'url' => $imagePath,
+                    'desc' => $desc,
+                ]);
+                $images->discussion_id = $discussion->id;
+                $images->save();
+            }
+        }
+        return redirect()->route('DiscussionList')->with('success', 'Discussion Added Successfully');
+        // ----------  Discussion Image End ----------
+    }
+
+
     public function SeeDiscussion($id)
     {
         $discussion = Discussion::find($id);
@@ -85,7 +133,7 @@ class DiscussionController extends Controller
         $replies = $this->RepliesList($discussion->id);
 
 
-        return view('discussion.SeeDiscussion', ['discussion' => $discussion, 'replies' => $replies]);
+        return view('discussion.SeeDiscussion', ['discussion' => $discussion, 'childDiscussions' => $childDiscussions, 'replies' => $replies]);
     }
 
 

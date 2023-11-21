@@ -20,48 +20,54 @@ use App\Models\UserSubscription;
 class PostController extends Controller
 {
     // Show All Blogs get methods 
-    public function index(){
+    public function index()
+    {
         // if(Auth::Check()){
-            $posts = Post::all();
-            $user = auth()->user();
-            $querytags = Tags::all();
-            return view('posts.index' , ['posts'=>$posts , 'tags'=>$querytags]);
+        $posts = Post::all();
+        $user = auth()->user();
+        $querytags = Tags::all();
+        $user = auth()->user();
+        return view('posts.index', ['posts' => $posts, 'tags' => $querytags, 'user' => $user]);
         // }
         // return redirect()->route('login'); 
     }
 
-    public function postreadmore($id){
+    public function postreadmore($id)
+    {
         $post = Post::find($id);
         $user = $post->author;
         $moreposts = $user->posts;
-        return view('posts.readmore' , ['post'=>$post , 'moreposts'=>$moreposts]) ;                                                                                                                                     
+        return view('posts.readmore', ['post' => $post, 'moreposts' => $moreposts]);
     }
 
-    public function blogposts(){
+    public function blogposts()
+    {
         $posts = Post::all();
         $querytags = Tags::all();
-        return view('posts.blogs' , [ 'posts'=>$posts ,  'tags'=>$querytags]) ;
+        return view('posts.blogs', ['posts' => $posts,  'tags' => $querytags]);
     }
 
-    public function tagpost($id){
+    public function tagpost($id)
+    {
         $tag = Tags::find($id);
         $posts = $tag->posts;
         $querytags = Tags::all();
-        return view('posts.blogs' , [ 'posts'=>$posts , 'tags'=>$querytags]) ; 
+        return view('posts.blogs', ['posts' => $posts, 'tags' => $querytags]);
     }
 
-    public function checkpostrules($id){
+    public function checkpostrules($id)
+    {
         $user = User::find($id);
         $userposts = $user->posts;
-        if($userposts){
+        if ($userposts) {
             $postCount = count($userposts);
-        }else{
+        } else {
             $postCount = 0;
         }
-        if($postCount>= 3){
+        if ($postCount >= 3) {
             $subscriptions = UserSubscription::where([
                 'user_id' => $user->id,
-                'is_active'=> 1,
+                'is_active' => 1,
             ])->orderBy('purchase_date')->first();
             // DD($subscriptions);
             return $subscriptions;
@@ -69,39 +75,41 @@ class PostController extends Controller
     }
 
     // get method to render a template
-    public function createblogtemp(){
+    public function createblogtemp()
+    {
         $user = auth()->user();
         // $tte = $this->checkpostrules($user->id);
         $posts = $user->posts;
-        if($posts){
+        if ($posts) {
             $postCount = count($posts);
-        }else{
+        } else {
             $postCount = 0;
         }
-        if($postCount>= 3){
+        if ($postCount >= 3) {
             $currentDateTime = Carbon::now();
             $existingSubscription = UserSubscription::where([
                 'user_id' => auth()->user()->id,
                 'is_active' => 1,
-            ])->where('purchase_date' ,'<=' , $currentDateTime->toDateTimeString())->get();
-            if ($existingSubscription){
+            ])->where('purchase_date', '<=', $currentDateTime->toDateTimeString())->get();
+            if ($existingSubscription) {
                 $content = "";
-                
-                return view('posts.create' , ['content'=> $content]);
-            }else{
-              
-                return redirect()->route('Subscriptionplans')->with('error','You Must Buy a Plan For More Posting');}
-        }
-        else{
+
+                return view('posts.create', ['content' => $content]);
+            } else {
+
+                return redirect()->route('Subscriptionplans')->with('error', 'You Must Buy a Plan For More Posting');
+            }
+        } else {
             $content = "";
-            return view('posts.create' , ['content'=>$content]);
+            return view('posts.create', ['content' => $content]);
         }
     }
 
-   
+
 
     // Create Blog Post method 
-    public function createBlog(Request $request){
+    public function createBlog(Request $request)
+    {
         // dd("jhgjh");
         $userId = Auth::id();
         $currentDate = date('y-m-d');
@@ -109,45 +117,44 @@ class PostController extends Controller
         $request->validate([
             'post_title' => 'required|max:500',
             'post_content' => 'required',
-            'post_desc' => 'required' , 
+            'post_desc' => 'required',
             'image_descriptions.*' => 'required', // validate Descriptions
             'tags.*' => 'max:100'
         ]);
-        
 
-        try{
+
+        try {
             $post = new Post;
             $post->post_title = $request->post_title;
             $post->post_content = $request->post_content;
             $post->post_desc = $request->post_desc;
             $post->author_id = $userId;
             $post->save();
-        }
-        catch (Exception  $e){
+        } catch (Exception  $e) {
             dd($e->getMessage());
             return $e;
         }
         $post_id = $post->id;
 
-        if($request->tags){
-            $tags = explode(',' , $request->tags);   //seprate tags by comma
-            $tags = array_map('trim' , $tags);  // remove whitespaces
+        if ($request->tags) {
+            $tags = explode(',', $request->tags);   //seprate tags by comma
+            $tags = array_map('trim', $tags);  // remove whitespaces
             $tags = array_unique($tags);   // remove duplicate tags 
 
             $tagsId = [];
-            foreach($tags as $tag){
-                $tag = Tags::firstOrCreate(['tag'=>$tag]);
+            foreach ($tags as $tag) {
+                $tag = Tags::firstOrCreate(['tag' => $tag]);
                 $tagsId[] = $tag->id;
             }
             $post->tags()->sync($tagsId);
         }
 
         // fxn to maintain the images that are connected with post
-        if(count($request->files)>=1){
-            for($i=0;$i<count($request->files);$i++){
-                $newimagesfie = 'image'.$i;
+        if (count($request->files) >= 1) {
+            for ($i = 0; $i < count($request->files); $i++) {
+                $newimagesfie = 'image' . $i;
                 $imagePath = str_replace('public/', '', $request->file($newimagesfie)->store('public/images'));
-                $desc =  $request->input("image_desc".$i);
+                $desc =  $request->input("image_desc" . $i);
 
                 $image = new Images;
                 $image->url = $imagePath;
@@ -158,20 +165,22 @@ class PostController extends Controller
         }
 
         return redirect()->route('index')
-            ->with('success' ,'Post Created Successfully');
+            ->with('success', 'Post Created Successfully');
     }
 
 
     // update template function 
-    public function updateblogtemp($id){
+    public function updateblogtemp($id)
+    {
         $post = Post::find($id);
-        return view('posts.update' , ['post'=>$post]);
+        return view('posts.update', ['post' => $post]);
     }
 
 
 
     // Update Blog Post method 
-    public function updateBlog(Request  $request , $id){
+    public function updateBlog(Request  $request, $id)
+    {
         $userId = Auth::id();
         $currentDate = date('y-m-d');
 
@@ -179,7 +188,7 @@ class PostController extends Controller
             'post_title' => 'required|max:500',
             'post_content' => 'required',
             'post_desc' => 'required',
-            
+
         ]);
 
         $post = Post::find($id);
@@ -190,51 +199,51 @@ class PostController extends Controller
         $post->save();
         $postid = $post->id;
 
-        if($request->tags){
-            $tags = explode(',' , $request->tags);   //seprate tags by comma
-            $tags = array_map('trim' , $tags);  // remove whitespaces
+        if ($request->tags) {
+            $tags = explode(',', $request->tags);   //seprate tags by comma
+            $tags = array_map('trim', $tags);  // remove whitespaces
             $tags = array_unique($tags);   // remove duplicate tags 
 
             $tagsId = [];
-            foreach($tags as $tag){
-                $tag = Tags::firstOrCreate(['tag'=>$tag]);
+            foreach ($tags as $tag) {
+                $tag = Tags::firstOrCreate(['tag' => $tag]);
                 $tagsId[] = $tag->id;
             }
             $post->tags()->sync($tagsId);
-
         }
 
         // EQL QUERY 
-        $findImage = Images::Where('post_id' , $postid)->get();
+        $findImage = Images::Where('post_id', $postid)->get();
         // EQL QUERY
-   
-        for($i=1;$i<=count($findImage);$i++){
-            $xx = "imageid".$i;
-            $image_desc = "image_desc".$i;
-            $image = "image".$i;
-            
+
+        for ($i = 1; $i <= count($findImage); $i++) {
+            $xx = "imageid" . $i;
+            $image_desc = "image_desc" . $i;
+            $image = "image" . $i;
+
             $imageid = $request->$xx;
             $imageDesc = $request->$image_desc;
             $imageFile = $request->file($image);
 
-            $getImage = Images::find($imageid); 
+            $getImage = Images::find($imageid);
 
             $getImage->desc = $imageDesc;
-            $imagePath = str_replace('public/', '',$imageFile->store('public/images'));
+            $imagePath = str_replace('public/', '', $imageFile->store('public/images'));
             $getImage->url = $imagePath;
-            $getImage->save();                                                                                                                                                                                                                             
+            $getImage->save();
         }
 
         return redirect()->route('index')
-            ->with('success' ,'Post Updated Successfully');
+            ->with('success', 'Post Updated Successfully');
     }
 
 
 
     // Delete Blog Post Method 
-    public function deleteBlog(Request $request , $id){
+    public function deleteBlog(Request $request, $id)
+    {
 
-            // 1st Method 
+        // 1st Method 
         // $this->authorize('deleteBlog' , $id);
 
         $post = Post::find($id);
@@ -243,73 +252,69 @@ class PostController extends Controller
         }
 
         // 2nd Method 
-        if (Gate::denies('deleteBlog' , $post)){
-            return redirect()->back()->with('error','You Are Not Authorized To delete this Post');
+        if (Gate::denies('deleteBlog', $post)) {
+            return redirect()->back()->with('error', 'You Are Not Authorized To delete this Post');
         };
         try {
-        // Delete related images
+            // Delete related images
             $images = Images::where('post_id', $post->id)->get();
             foreach ($images as $image) {
                 $image->delete();
             }
 
-        // Delete the post
+            // Delete the post
             $post->delete();
-                return redirect()->route('index')->with('success', 'Post deleted successfully');
-            } catch (Exception $e) {
-                return redirect()->route('index')->with('error', 'An error occurred while deleting the post.');
-                }
-
+            return redirect()->route('index')->with('success', 'Post deleted successfully');
+        } catch (Exception $e) {
+            return redirect()->route('index')->with('error', 'An error occurred while deleting the post.');
+        }
     }
 
 
 
-    public function SubScriptionPlans(){
+    public function SubScriptionPlans()
+    {
         return view('posts.subscriptions');
     }
 
 
 
-    public function SearchBlog(Request $request){
+    public function SearchBlog(Request $request)
+    {
         $request->validate([
             'searchItem' => 'required|'
         ]);
-        
-        try{
-        $posts = Post::where("post_title","like","%".$request->searchItem."%")
-        ->orWhere("post_content","like","%".$request->searchItem."%")
-        ->orWhere("post_desc" , "like" , "%".$request->searchItem."%")
-        ->orWhere('author_id' , "like" , "%".$request->searchItem."%")
-        ->get();
-    }
-    catch(Exception $e) {
-        return $e;
-    }
 
-    return redirect()->route('index')->with("SearchItems", $posts);
-    }
+        try {
+            $posts = Post::where("post_title", "like", "%" . $request->searchItem . "%")
+                ->orWhere("post_content", "like", "%" . $request->searchItem . "%")
+                ->orWhere("post_desc", "like", "%" . $request->searchItem . "%")
+                ->orWhere('author_id', "like", "%" . $request->searchItem . "%")
+                ->get();
+        } catch (Exception $e) {
+            return $e;
+        }
 
-
-
-    public function PostShare(Request $request, $id) {
-    $post = Post::find($id);
-
-    if (!$post) {
-        // Handle case where post is not found
-        return response()->json(['error' => 'Post not found'], 404);
+        return redirect()->route('index')->with("SearchItems", $posts);
     }
 
-    $postData = [
-        'title' => $post->post_title,
-        'url' => route('postreadmore', ['id' => $post->id]), // Adjust the route name as needed
-        'image' => asset('storage/' . $post->images[0]->url), // Adjust the image URL as needed
-    ];
-
-    return response()->json(['post' => $postData]);
-}
-
-    
 
 
+    public function PostShare(Request $request, $id)
+    {
+        $post = Post::find($id);
 
+        if (!$post) {
+            // Handle case where post is not found
+            return response()->json(['error' => 'Post not found'], 404);
+        }
+
+        $postData = [
+            'title' => $post->post_title,
+            'url' => route('postreadmore', ['id' => $post->id]), // Adjust the route name as needed
+            'image' => asset('storage/' . $post->images[0]->url), // Adjust the image URL as needed
+        ];
+
+        return response()->json(['post' => $postData]);
+    }
 }

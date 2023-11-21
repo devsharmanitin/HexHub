@@ -77,7 +77,7 @@ Route::controller(AuthController::class)->group(function () {
 
     Route::get('/add/user/{id}/details', 'addRequestUser')->name('addRequestUser');
     Route::post('/update/user/details/{id}/', 'addRequestUserdb')->name('addRequestUserdb');
-    Route::get('/user/profile/request', 'RequestUser')->name('RequestUser');
+    Route::get('/user/profile/{slug}/request', 'RequestUser')->name('RequestUser');
     Route::get('/register', 'RegisterController')->name('register');
     Route::post('/create/user', 'CreateUser')->name('CreateUser');
     Route::get('/login', 'LoginController')->name('login');
@@ -121,6 +121,7 @@ Route::controller(DiscussionController::class)->group(function () {
     Route::get('user/post/discussions/list', 'DiscussionList')->name('DiscussionList');
     Route::post('/user/post/discussion', 'DiscussionCreate')->name('DiscussionCreate');
     Route::get('dicussion/topic/{id}/more', 'SeeDiscussion')->name('SeeDiscussion');
+    Route::put('discussion/{id}/update', 'DiscussionUpdate')->name('DiscussionUpdate');
 
     // ------------ reply Answers discussion -------------
 

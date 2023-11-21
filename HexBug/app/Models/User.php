@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\models\Message;
 use App\Models\Comments;
+use Usamamuneerchaudhary\Commentify\Traits\HasUserAvatar;
+use Illuminate\Support\Str;
 
 // Stripe Cashier 
 use Laravel\Cashier\Billable;
@@ -16,6 +18,7 @@ use Laravel\Cashier\Billable;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use HasUserAvatar;
 
 
     /**
@@ -57,6 +60,62 @@ class User extends Authenticatable
         'image',
 
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            // Remove non-alphanumeric characters (except for periods) from the email
+            $modifiedEmail = preg_replace('/[^a-zA-Z0-9.]+/', '', $model->email);
+            $emailParts = explode('@', $model->email);
+
+
+            // Shuffle the characters in each part
+            $shuffledUsername = str_shuffle($emailParts[0]);
+            $shuffledDomain = str_shuffle($emailParts[1]);
+            $shuffeledslug = ($shuffledUsername . ' ' . $shuffledDomain);
+
+
+            $instance = new self;
+            $result = $instance->splitAndJoin($shuffeledslug);
+
+            // Generate the slug based on the modified email
+            $model->slug = Str::slug($result, '-');
+        });
+    }
+
+
+    public function splitAndJoin($string, $numParts = 4)
+    {
+        // Generate random lengths for each part
+        $lengths = [];
+        for ($i = 0; $i < $numParts - 1; $i++) {
+            $lengths[] = rand(1, strlen($string) - array_sum($lengths) - ($numParts - $i - 1));
+        }
+
+        // Add the remaining length for the last part
+        $lengths[] = strlen($string) - array_sum($lengths);
+
+        // Split the string into parts based on the random lengths
+        $parts = [];
+        $start = 0;
+        foreach ($lengths as $length) {
+            $parts[] = substr($string, $start, $length);
+            $start += $length;
+        }
+
+        // Join the parts with spaces
+        $result = implode(' ', $parts);
+
+        return $result;
+    }
+
 
     public function posts()
     {

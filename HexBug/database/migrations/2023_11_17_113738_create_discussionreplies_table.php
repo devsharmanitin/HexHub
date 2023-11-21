@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();
 
+
             // Foreign keys
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('discussion_id')->references('id')->on('discussion')->onDelete('cascade');

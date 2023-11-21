@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->text('gender')->nullable();
             $table->text('status')->nullable();
+            $table->string('slug')->unique();
         });
     }
 

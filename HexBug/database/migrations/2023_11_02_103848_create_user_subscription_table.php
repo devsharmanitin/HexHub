@@ -12,7 +12,7 @@ return new class extends Migration
     //         $table->unsignedBigInteger('tags_id')->nullable();
     //         $table->timestamps();
     //     });
-    
+
     //     // Define Foreign key Relation 
     //     Schema::table('post_tag', function (Blueprint $table) {
     //         $table->foreign('post_id')->references('id')->on('posts');
@@ -37,8 +37,6 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('subscription_id')->references('id')->on('subscription');
         });
-
-
     }
 
     /**

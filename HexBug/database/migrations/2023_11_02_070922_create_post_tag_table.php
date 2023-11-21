@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tags_id')->nullable();
             $table->timestamps();
         });
-    
+
         // Define Foreign key Relation 
         Schema::table('post_tag', function (Blueprint $table) {
             $table->foreign('post_id')->references('id')->on('posts');
