@@ -4,8 +4,10 @@
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+
 import axios from 'axios';
 window.axios = axios;
+import Echo from "laravel-echo"
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -29,4 +31,15 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
+// });
+
+
+// resources/assets/js/bootstrap.js
+
+
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: '56615f6fe58bd37df2ac',
+//     cluster: "ap2" ,
+//     encrypted: true
 // });

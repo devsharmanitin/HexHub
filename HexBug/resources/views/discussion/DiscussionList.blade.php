@@ -74,6 +74,51 @@
 								Join the conversation! Share your thoughts, ideas, and experiences in our vibrant discussion community. Your voice matters, and we're eager to hear what you have to say
 							</p>
 						</a>
+						<hr>
+
+
+						@if(count($pinnedDiss)>=1)
+						@foreach($pinnedDiss as $Pdiscussion)
+
+
+						<a href="{{ route('SeeDiscussion', ['id' => $discussion->id]) }}" class="text-dark">
+							<div class="row mb-4 border-bottom pb-2">
+								<div class="col-3">
+									@if(count($Pdiscussion->images)>=1)
+									<img src="{{asset('storage/'.$Pdiscussion->images[0]->url)}}" class="img-fluid shadow-1-strong rounded" alt="" />
+									@else
+									<img src="https://www.positronx.io/wp-content/uploads/2021/06/14952-2.jpghttps://www.positronx.io/wp-content/uploads/2021/06/14952-2.jpg" class="img-fluid shadow-1-strong rounded" alt="" />
+									@endif
+								</div>
+
+								<div class="col-9">
+									<div class="row">
+										<div class="col-8">
+											<p class="mb-2"><strong>{{$Pdiscussion->title}}</strong></p>
+											<p>
+												<u> 15.07.2020</u>
+											</p>
+											<div class="d-flex">
+												<img src="{{ asset('storage/'.$Pdiscussion->user->image) }}" alt="" style="height: 25px; width: 25px; border-radius: 50%; object-fit: cover;">
+												&nbsp;&nbsp;
+												<p style="font-size: 14px; font-weight: 600;">{{$Pdiscussion->user->name}}</p>
+											</div>
+										</div>
+										<div class="col-4">
+											<p class="mb-2"><strong>Replies</strong></p>
+											<p>
+												<u> 20</u>
+											</p>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</a>
+						@endforeach
+
+
+						@endif
 
 						<hr />
 

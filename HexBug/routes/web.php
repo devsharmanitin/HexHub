@@ -12,6 +12,7 @@ use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\SubscriptionController;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\ChatsController;
 
 
 /*
@@ -127,3 +128,6 @@ Route::controller(DiscussionController::class)->group(function () {
 
     Route::post('user/{dsid}/answer/post', 'CreateReply')->name('CreateReply');
 });
+
+
+

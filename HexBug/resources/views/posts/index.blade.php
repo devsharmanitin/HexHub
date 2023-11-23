@@ -407,6 +407,7 @@
         <!-- heading  -->
         <div class="row blog-world-release mb-4">
           <span class="bold">Recently Released</span>
+
         </div>
         <!-- heading -->
         <!-- blog structure  -->

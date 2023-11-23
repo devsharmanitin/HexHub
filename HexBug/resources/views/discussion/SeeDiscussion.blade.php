@@ -153,13 +153,20 @@
 								</div>
 							</div>
 						</div>
+						<form action="{{ route('DiscussionCreate') }}" method="post" class="d-flex">
+							@csrf
+							<input type="hidden" value="{{ $discussion->id }}" name="parent_id">
+							<input type="text" name="content" class="form-control me-2" id="" placeholder="Add Discussion Solution">
+							<button type="submit" class="btn btn-link"><i class="fa-solid fa-right-long"></i></button>
+						</form>
 						<hr>
-						<p class="my-4 pb-1">52 comments</p>
+
+						<p class="my-4 pb-1"> {{count($discussion->children)}} Answers</p>
 
 						@if($childDiscussions->count() > 0)
-						<div>
-							<h2 class="text-danger"><u> Discussions Reply</u></h2>
-							<hr>
+						<div class="" style="background-color: rgb(216, 216, 216);">
+							<h2 class="text-danger mb-2"><u> Discussions Reply</u></h2>
+							<hr class="mb-2">
 							@foreach($childDiscussions as $childDiscussion)
 							<div class="d-flex align-items-start mb-4">
 								<div class="flex-shrink-0">
@@ -214,7 +221,7 @@
 								@foreach($childDiscussion->children as $reply)
 
 								<li>
-									<div class="d-flex align-items-start mb-4">
+									<div class="d-flex align-items-start ">
 										<div class="flex-shrink-0">
 											<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp" alt="Generic placeholder image" class="img-fluid rounded-circle border border-dark border-3" style="width: 40px;">
 										</div>
@@ -275,12 +282,7 @@
 						@endif
 
 
-						<form action="{{ route('DiscussionCreate') }}" method="post" class="d-flex">
-							@csrf
-							<input type="hidden" value="{{ $discussion->id }}" name="parent_id">
-							<input type="text" name="content" class="form-control me-2" id="" placeholder="Add Discussion Solution">
-							<button type="submit" class="btn btn-link"><i class="fa-solid fa-right-long"></i></button>
-						</form>
+
 					</div>
 
 
@@ -386,6 +388,7 @@
 					</div>
 
 				</form>
+				{{ count($discussion->images) }}
 
 			</div>
 
@@ -503,3 +506,27 @@
 
 
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+<template>
+	<div class="input-group">
+		<input id="btn-input" type="text" name="message" class="form-control input-sm" placeholder="Type your message here..." v-model="newMessage" @keyup.enter="sendMessage">
+
+		<span class="input-group-btn">
+			<button class="btn btn-primary btn-sm" id="btn-chat" @click="sendMessage">
+				Send
+			</button>
+		</span>
+	</div>
+</template>

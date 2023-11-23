@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\Discussion;
 use App\Models\Category;
@@ -11,6 +12,7 @@ use App\Models\Images;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 
+
 class DiscussionController extends Controller
 {
     //
@@ -18,8 +20,13 @@ class DiscussionController extends Controller
     public function DiscussionList()
     {
         $discussions = Discussion::whereNull('parent_id')->get();
+        $pineedDiss = Discussion::whereNull('parent_id')
+            ->where('is_pinned', '1')
+            ->orderBy('created_at')
+            ->get();
         $context = [
-            'discussions' => $discussions
+            'discussions' => $discussions,
+            'pinnedDiss' => $pineedDiss,
         ];
         return view('discussion.DiscussionList', $context);
     }
@@ -171,5 +178,21 @@ class DiscussionController extends Controller
 
         $reply->save();
         return redirect()->back()->with('success', 'Answer Posted');
+    }
+
+
+
+    // ---------------------- Dicussion Pin ----------------------------
+    public function PinDiscussion($id)
+    {
+        try {
+
+            $discussion = Discussion::find($id);
+        } catch (Exception $error) {
+            throw $error;
+        }
+        $discussion->is_pinned = 1;
+        $discussion->save();
+        return redirect()->back()->with('success', 'PInned Successfully');
     }
 }

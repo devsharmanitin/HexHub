@@ -165,7 +165,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,  // if Not Using Websockets comment this 
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Usamamuneerchaudhary\Commentify\Providers\CommentifyServiceProvider::class,

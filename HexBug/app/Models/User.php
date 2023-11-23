@@ -61,6 +61,20 @@ class User extends Authenticatable
 
     ];
 
+
+    // app/User.php
+
+    /**
+     * A user can have many messages
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\ //HasMany
+     */
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+
     public function getRouteKeyName()
     {
         return 'slug';
