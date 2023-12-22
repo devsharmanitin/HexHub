@@ -440,9 +440,14 @@
                 <h5 style="font-weight: 700;">{{ $post->post_title }}</h5>
                 <p style="font-weight: 600; font-size: 14px; color: rgb(90, 89, 89);">{{ implode(' ', array_slice(str_word_count($post->post_desc, 1), 0, 100)) }}</p>
               </div>
-              <div class="img">
-                <img src="{{ asset('storage/'.$post->images[0]->url) }}">
-              </div>
+
+                  @if(count($post->images)>=1) {
+                    <div class="img">
+                        <img src="{{ asset('storage/'.$post->images[0]->url) }}">
+                    </div>
+                  }@endif
+
+
             </div>
             @foreach ($post->tags as $tag)
             <span class="badge m-1" style="background: whitesmoke;  font-size: 14px; font-weight: 700; color: #6c757d;  border: 1.5px solid rgb(56, 56, 56);"><a class="" href="/tag/Django" style="text-decoration: none; color: black;">{{$tag->tag}}</a></span>
